@@ -1,92 +1,3 @@
-#' Shorcut for create/add time series charts from a ts object
-#'
-#' This function add a time series to a \code{highchart} object
-#' from a \code{ts} object. 
-#' 
-#' This function \bold{modify} the type of \code{chart} to \code{datetime}
-#'  
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param ts A time series object.
-#' @param ... Aditional arguments for the data series (\url{http://api.highcharts.com/highcharts#series}).
-#' 
-#' @examples 
-#' 
-#' require("dplyr")
-#' 
-#' highchart() %>% 
-#'   hc_title(text = "Monthly Airline Passenger Numbers 1949-1960") %>% 
-#'   hc_subtitle(text = "The classic Box and Jenkins airline data") %>% 
-#'   hc_add_serie_ts2(AirPassengers, name = "passengers") %>%
-#'   hc_tooltip(pointFormat =  '{point.y} passengers')
-#' 
-#' highchart() %>% 
-#'   hc_title(text = "Monthly Deaths from Lung Diseases in the UK") %>% 
-#'   hc_add_serie_ts2(fdeaths, name = "Female") %>%
-#'   hc_add_serie_ts2(mdeaths, name = "Male")
-#'   
-#' @importFrom stats is.ts time
-#' 
-#' @export 
-hc_add_serie_ts2 <- function(hc, ts, ...) {
-  
-  assertthat::assert_that(is.ts(ts), .is_highchart(hc))
-  
-  # http://stackoverflow.com/questions/29202021/r-how-to-extract-dates-from-a-time-series
-  dates <- time(ts) %>% 
-    zoo::as.Date()
-  
-  values <- as.vector(ts)
-  
-  hc %>% hc_add_serie_ts(values, dates, ...)
-    
-}
-
-#' Shorcut for create/add time series from values and dates
-#'
-#' This function add a time series to a \code{highchart} object. 
-#' 
-#' This function \bold{modify} the type of \code{chart} to \code{datetime}
-#'  
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param values A numeric vector
-#' @param dates  A date vector (same length as \code{values})
-#' @param ... Aditional arguments for the data series (\url{http://api.highcharts.com/highcharts#series}).
-#' 
-#' @examples 
-#' 
-#' \dontrun{
-#' 
-#' require("ggplot2")
-#' data(economics, package = "ggplot2")
-#' 
-#' hc_add_serie_ts(hc = highchart(),
-#'                 values = economics$psavert, dates = economics$date,
-#'                 name = "Personal Savings Rate")
-#' }
-#' 
-#' @importFrom zoo as.Date
-#' 
-#' @export 
-hc_add_serie_ts <- function(hc, values, dates, ...) {
-  
-  assertthat::assert_that(.is_highchart(hc), is.numeric(values), is.date(dates))
-  
-  timestamps <- dates %>% 
-    zoo::as.Date() %>%
-    as.POSIXct() %>% 
-    as.numeric()
-  
-  # http://stackoverflow.com/questions/10160822/handling-unix-timestamp-with-highcharts  
-  timestamps <- 1000 * timestamps
-  
-  ds <- list.parse2(data.frame(timestamps, values))
-  
-  hc %>% 
-    hc_xAxis(type = "datetime") %>% 
-    hc_add_serie(marker = list(enabled = FALSE), data = ds, ...)
-  
-}
-
 #' Shorcut for create scatter plots
 #'
 #' This function helps to create scatter plot from two numerics vectors. Options
@@ -107,22 +18,20 @@ hc_add_serie_ts <- function(hc, values, dates, ...) {
 #' 
 #' @examples 
 #' 
-#' require("dplyr")
-#' 
 #' hc <- highchart() %>% 
 #'   hc_title(text = "Motor Trend Car Road Tests") %>% 
 #'   hc_xAxis(title = list(text = "Weight")) %>% 
 #'   hc_yAxis(title = list(text = "Miles/gallon"))
 #'    
-#' hc_add_serie_scatter(hc, mtcars$wt, mtcars$mpg)
+#' hc_add_series_scatter(hc, mtcars$wt, mtcars$mpg)
 #' 
-#' hc_add_serie_scatter(hc, mtcars$wt, mtcars$mpg,
+#' hc_add_series_scatter(hc, mtcars$wt, mtcars$mpg,
 #'                      mtcars$drat)
 #'                      
-#' hc_add_serie_scatter(hc, mtcars$wt, mtcars$mpg,
+#' hc_add_series_scatter(hc, mtcars$wt, mtcars$mpg,
 #'                      mtcars$drat, mtcars$cyl)
 #'                      
-#' hc_add_serie_scatter(hc, mtcars$wt, mtcars$mpg,
+#' hc_add_series_scatter(hc, mtcars$wt, mtcars$mpg,
 #'                      mtcars$drat, mtcars$hp,
 #'                      rownames(mtcars),
 #'                      dataLabels = list(
@@ -140,12 +49,11 @@ hc_add_serie_ts <- function(hc, values, dates, ...) {
 #'            footerFormat = "</table>")
 #' 
 #' @importFrom dplyr mutate group_by do select data_frame
-#' @import magrittr
 #' @importFrom viridisLite viridis
 #' @importFrom stats ecdf
 #' 
 #' @export 
-hc_add_serie_scatter <- function(hc, x, y, z = NULL, color = NULL, label = NULL,
+hc_add_series_scatter <- function(hc, x, y, z = NULL, color = NULL, label = NULL,
                                  showInLegend = FALSE, viridis.option = "D", ...) {
   
   assertthat::assert_that(.is_highchart(hc), length(x) == length(y),
@@ -182,13 +90,17 @@ hc_add_serie_scatter <- function(hc, x, y, z = NULL, color = NULL, label = NULL,
     df <- df %>% mutate(label = label)
   }
   
-  ds <- setNames(rlist::list.parse(df), NULL)
+  ds <- list.parse3(df)
   
   type <- ifelse(!is.null(z), "bubble", "scatter")
   
-  hc %>% hc_add_serie(data = ds, type = type, showInLegend = showInLegend, ...)
+  hc %>% hc_add_series(data = ds, type = type, showInLegend = showInLegend, ...)
   
 }
+
+#' @rdname hc_add_series_scatter
+#' @export
+hc_add_serie_scatter <- hc_add_series_scatter
 
 #' Shorcut for add series for pie, bar and column charts
 #'
@@ -203,8 +115,6 @@ hc_add_serie_scatter <- function(hc, x, y, z = NULL, color = NULL, label = NULL,
 #' 
 #' @examples 
 #' 
-#' require("dplyr")
-#' 
 #' data("favorite_bars")
 #' data("favorite_pies")
 #' 
@@ -212,9 +122,9 @@ hc_add_serie_scatter <- function(hc, x, y, z = NULL, color = NULL, label = NULL,
 #'   hc_title(text = "This is a bar graph describing my favorite pies
 #'                    including a pie chart describing my favorite bars") %>%
 #'   hc_subtitle(text = "In percentage of tastiness and awesomeness") %>% 
-#'   hc_add_serie_labels_values(favorite_pies$pie, favorite_pies$percent, name = "Pie",
+#'   hc_add_series_labels_values(favorite_pies$pie, favorite_pies$percent, name = "Pie",
 #'                              colorByPoint = TRUE, type = "column") %>% 
-#'   hc_add_serie_labels_values(favorite_bars$bar, favorite_bars$percent,
+#'   hc_add_series_labels_values(favorite_bars$bar, favorite_bars$percent,
 #'                              colors = substr(terrain.colors(5), 0 , 7), type = "pie",
 #'                              name = "Bar", colorByPoint = TRUE, center = c('35%', '10%'),
 #'                              size = 100, dataLabels = list(enabled = FALSE)) %>% 
@@ -226,7 +136,7 @@ hc_add_serie_scatter <- function(hc, x, y, z = NULL, color = NULL, label = NULL,
 #' 
 #' 
 #' @export
-hc_add_serie_labels_values <- function(hc, labels, values, colors = NULL, ...) {
+hc_add_series_labels_values <- function(hc, labels, values, colors = NULL, ...) {
   
   assertthat::assert_that(.is_highchart(hc),
                           is.numeric(values),
@@ -241,17 +151,21 @@ hc_add_serie_labels_values <- function(hc, labels, values, colors = NULL, ...) {
     
   }
   
-  ds <- setNames(rlist::list.parse(df), NULL)
+  ds <- list.parse3(df)
   
-  hc <- hc %>% hc_add_serie(data = ds, ...)
+  hc <- hc %>% hc_add_series(data = ds, ...)
   
   hc
                       
 }
 
+#' @rdname hc_add_series_labels_values
+#' @export
+hc_add_serie_labels_values <- hc_add_series_labels_values
+
 #' Shorcut for create treemaps
 #'
-#' This function helps to create hicharts treemaps from \code{treemap} objects
+#' This function helps to create higcharts treemaps from \code{treemap} objects
 #' from the package \code{treemap}.
 #' 
 #' @param hc A \code{highchart} \code{htmlwidget} object. 
@@ -260,7 +174,7 @@ hc_add_serie_labels_values <- function(hc, labels, values, colors = NULL, ...) {
 #'   (\url{http://api.highcharts.com/highcharts#series}).
 #' 
 #' @examples 
-#' 
+#'  
 #' \dontrun{
 #' 
 #' library("treemap")
@@ -275,7 +189,7 @@ hc_add_serie_labels_values <- function(hc, labels, values, colors = NULL, ...) {
 #'               draw = FALSE)
 #' 
 #' highchart(height = 800) %>% 
-#'   hc_add_serie_treemap(tm, allowDrillToNode = TRUE,
+#'   hc_add_series_treemap(tm, allowDrillToNode = TRUE,
 #'                        layoutAlgorithm = "squarified",
 #'                        name = "tmdata") %>% 
 #'    hc_title(text = "Gross National Income World Data") %>% 
@@ -286,14 +200,12 @@ hc_add_serie_labels_values <- function(hc, labels, values, colors = NULL, ...) {
 #' }
 #' 
 #' @importFrom dplyr filter_ mutate_ rename_ select_ tbl_df
-#' @importFrom plyr ldply
-#' @importFrom purrr map_if map
+#' @importFrom purrr map map_df map_if 
 #' 
 #' @export 
-hc_add_serie_treemap <- function(hc, tm, ...) {
+hc_add_series_treemap <- function(hc, tm, ...) {
   
-  assertthat::assert_that(.is_highchart(hc),
-                          is.list(tm))
+  assertthat::assert_that(.is_highchart(hc), is.list(tm))
   
   df <- tm$tm %>% 
     tbl_df() %>% 
@@ -305,7 +217,7 @@ hc_add_serie_treemap <- function(hc, tm, ...) {
   
   ndepth <- which(names(df) == "value") - 1
   
-  ds <- ldply(seq(ndepth), function(lvl){ # lvl <- sample(seq(ndepth), size = 1)
+  ds <- map_df(seq(ndepth), function(lvl){ # lvl <- sample(seq(ndepth), size = 1)
     
     df2 <- df %>% 
       filter_(sprintf("level == %s", lvl)) %>% 
@@ -325,7 +237,7 @@ hc_add_serie_treemap <- function(hc, tm, ...) {
     
   })
   
-  ds <- setNames(rlist::list.parse(ds), NULL)
+  ds <- list.parse3(ds)
   
   ds <- map(ds, function(x){
     if (is.na(x$parent))
@@ -333,6 +245,105 @@ hc_add_serie_treemap <- function(hc, tm, ...) {
     x
   })
   
-  hc %>% hc_add_serie(data = ds, type = "treemap", ...)
+  hc %>% hc_add_series(data = ds, type = "treemap", ...)
   
 }
+
+#' @rdname hc_add_series_treemap
+#' @export
+hc_add_serie_treemap <- hc_add_series_treemap
+
+#' Shorcut for create map
+#'
+#' This function helps to create higcharts treemaps from \code{treemap} objects
+#' from the package \code{treemap}.
+#' 
+#' @param hc A \code{highchart} \code{htmlwidget} object. 
+#' @param map A \code{list} object loaded from a geojson file.
+#' @param df A \code{data.frame} object with data to chart. Code region and value are
+#'   required.
+#' @param value A string value with the name of the column to chart.
+#' @param joinBy What property to join the  \code{map} and \code{df}
+#' @param ... Aditional shared arguments for the data series
+#'   (\url{http://api.highcharts.com/highcharts#series}).
+#'   
+#' @examples 
+#' 
+#' library("dplyr")
+#' library("viridisLite")
+#' 
+#' data("USArrests", package = "datasets")
+#' data("usgeojson")
+#' 
+#' USArrests <- USArrests %>% 
+#'   mutate(state = rownames(.))
+#' 
+#' n <- 4
+#' colstops <- data.frame(q = 0:n/n,
+#'                        c = substring(viridis(n + 1, option = "A"), 0, 7)) %>% 
+#' list.parse2()
+#' 
+#' highchart() %>% 
+#'   hc_title(text = "Violent Crime Rates by US State") %>% 
+#'   hc_subtitle(text = "Source: USArrests data") %>% 
+#'   hc_add_series_map(usgeojson, USArrests, name = "Murder arrests (per 100,000)",
+#'                     value = "Murder", joinBy = c("woename", "state"),
+#'                     dataLabels = list(enabled = TRUE,
+#'                                       format = '{point.properties.postalcode}')) %>% 
+#'   hc_colorAxis(stops = colstops) %>% 
+#'   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+#'   hc_mapNavigation(enabled = TRUE) 
+#' 
+#' \dontrun{
+#' 
+#' library("viridisLite")
+#' library("dplyr")
+#' data(unemployment)
+#' data(uscountygeojson)
+#'  
+#' dclass <- data_frame(from = seq(0, 10, by = 2),
+#'                      to = c(seq(2, 10, by = 2), 50),
+#'                      color = substring(viridis(length(from), option = "C"), 0, 7))
+#'  dclass <- list.parse3(dclass)
+# 
+#' highchart() %>% 
+#'   hc_title(text = "US Counties unemployment rates, April 2015") %>% 
+#'   hc_add_series_map(uscountygeojson, unemployment,
+#'                     value = "value", joinBy = "code") %>%
+#'   hc_colorAxis(dataClasses = dclass) %>%
+#'   hc_legend(layout = "vertical", align = "right",
+#'             floating = TRUE, valueDecimals = 0,
+#'             valueSuffix = "%") %>%
+#'   hc_mapNavigation(enabled = TRUE)
+#'   
+#' }
+#'   
+#' @importFrom utils tail
+#' @export
+hc_add_series_map <- function(hc, map, df, value, joinBy, ...) {
+  
+  assertthat::assert_that(.is_highchart(hc),
+                          is.list(map),
+                          is.data.frame(df),
+                          value %in% names(df),
+                          tail(joinBy, 1) %in% names(df))
+  
+  joindf <- tail(joinBy, 1)
+  
+  ddta <- data_frame(value = df[[value]],
+                     code = df[[joindf]]) %>% 
+    list.parse3()
+  
+  hc$x$type <- "map"
+  
+  hc %>% 
+    hc_add_series(mapData = map, data = ddta,
+                  joinBy = c(joinBy[1], "code"),
+                  ...) %>% 
+    hc_colorAxis(min = 0)
+  
+}
+
+#' @rdname hc_add_series_map
+#' @export
+hc_add_serie_map <- hc_add_series_map

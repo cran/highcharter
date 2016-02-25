@@ -17,10 +17,8 @@ More examples are in http://www.highcharts.com/docs/chart-design-and-style/theme
 }
 \examples{
 
-require("dplyr")
-
 hc <- highchart(debug = TRUE) \%>\% 
-  hc_add_serie_scatter(mtcars$wt, mtcars$mpg, color = mtcars$cyl) \%>\% 
+  hc_add_series_scatter(mtcars$wt, mtcars$mpg, color = mtcars$cyl) \%>\% 
   hc_chart(zoomType = "xy") \%>\% 
   hc_title(text = "Motor Trend Car Road Tests") \%>\% 
   hc_subtitle(text = "Motor Trend Car Road Tests") \%>\% 

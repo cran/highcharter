@@ -4,22 +4,20 @@
 #' 
 #' @examples
 #' 
-#' require("dplyr")
-#' 
-#' highchart() %>% 
-#'   hc_add_serie(data = c(7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2,
-#'                         26.5, 23.3, 18.3, 13.9, 9.6),
-#'                         type = "column") %>% 
+#' hc_demo() %>% 
 #'   hc_add_theme(hc_theme_chalk())
 #' 
+#' @importFrom grDevices colorRampPalette 
 #' @export
 hc_theme_chalk <- function(){
   
+  cols <- colorRampPalette(c("#FFFFFF", "#8C8984"))(4)
+  
   theme <-   
   list(
-    colors = c("#FAFAFA", "#DEDEDE","#FFFFFF"),
+    colors = cols,
     chart = list(
-      divBackgroundImage = 'https://www.amcharts.com/inspiration/chalk/bg.jpg',
+      divBackgroundImage = "https://www.amcharts.com/inspiration/chalk/bg.jpg",
       backgroundColor = "transparent",
       style = list(
         fontFamily = "Shadows Into Light",
@@ -27,9 +25,9 @@ hc_theme_chalk <- function(){
       )
     ),
     plotOptions = list(
-      line = list(
+      scatter = list(
         marker = list(
-          enabled = FALSE
+          radius = 10
           
         )
         
@@ -50,7 +48,7 @@ hc_theme_chalk <- function(){
     legend = list(
       enabled = TRUE,
       itemStyle = list(
-        fontSize = "30px",
+        fontSize = "20px",
         color = "#FFFFFF"
       )
       
@@ -60,31 +58,35 @@ hc_theme_chalk <- function(){
       
     ),
     xAxis = list(
+      lineWidth = 1,
+      tickWidth = 1,
+      gridLineColor = "transparent",
       labels = list(
         enabled = TRUE,
         style = list(
           color = "#FFFFFF",
-          fontSize = "17px"
+          fontSize = "20px"
         )
       ),
       title = list(
         enabled = TRUE,
         style = list(
           color = "#FFFFFF",
-          fontSize = "0px"
+          fontSize = "20px"
           
         )
       )
     ),
     yAxis = list(
+      lineWidth = 1,
+      tickWidth = 1,
+      gridLineColor = "transparent",
       labels = list(
         enabled = TRUE,
         style = list(
           color = "#FFFFFF",
           fontSize = "20px"
-          
         )
-        
       ),
       title = list(
         enabled = TRUE,
@@ -93,9 +95,7 @@ hc_theme_chalk <- function(){
           fontSize = "20px"
           
         )
-        
-      ),
-      gridLineColor = "transparent"
+      )
     ),
     tooltip = list(
       backgroundColor = "#333333",
