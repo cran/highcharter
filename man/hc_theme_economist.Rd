@@ -2,12 +2,15 @@
 % Please edit documentation in R/theme-economist.R
 \name{hc_theme_economist}
 \alias{hc_theme_economist}
-\title{Fivethirtyeight theme for highcharts}
+\title{Economist theme for highcharts}
 \usage{
-hc_theme_economist()
+hc_theme_economist(...)
+}
+\arguments{
+\item{...}{Named argument to modify the theme}
 }
 \description{
-Fivethirtyeight theme for highcharts
+Economist theme for highcharts
 }
 \examples{
 

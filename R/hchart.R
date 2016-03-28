@@ -242,6 +242,133 @@ hchart.dist <- function(object, ...) {
     hc_colorAxis(arg  = "")
 }
 
+#' @importFrom igraph get.vertex.attribute get.edge.attribute get.edgelist layout_nicely
+#' @importFrom stringr str_to_title
+#' @importFrom stats setNames
+#' @export
+hchart.igraph <- function(object, ..., layout = layout_nicely, digits = 2) {
+  
+  lst_to_tbl <- function(x) {
+    x %>% 
+      data.frame(stringsAsFactors = FALSE) %>% 
+      tbl_df() 
+  }
+  
+  # data
+  dfv <- layout(object) %>%
+    round(digits) %>% 
+    lst_to_tbl() %>% 
+    setNames(c("x", "y"))
+  
+  dfvex <- object %>% 
+    get.vertex.attribute() %>% 
+    lst_to_tbl()
+
+  if (nrow(dfvex) > 0) 
+    dfv <- tbl_df(cbind(dfv, dfvex))
+  
+  if (is.null(dfv[["name"]]))
+    dfv <- dfv %>%  mutate(name = seq(nrow(dfv)))
+  
+  names(dfv) <- str_replace_all(names(dfv), "\\.", "_")
+  
+  dfe <-  object %>%
+    get.edgelist() %>% 
+    lst_to_tbl() %>% 
+    setNames(c("from", "to")) %>% 
+    left_join(dfv %>%
+                select_(.dots = c("name", "x", "y")) %>%
+                setNames(c("from", "xf", "yf")), by = "from") %>% 
+    left_join(dfv %>% 
+                select_(.dots = c("name", "x", "y")) %>% 
+                setNames(c("to", "xt", "yt")), by = "to") %>% 
+    mutate(linkedTo  = "e")
+  
+  dfex <- object %>% 
+    get.edge.attribute() %>% 
+    lst_to_tbl()
+  
+  if (nrow(dfex) > 0)
+    dfe <- tbl_df(cbind(dfe, dfex))
+  
+  # Checking opts
+  type <- "scatter"
+  
+  if (!is.null(dfv[["size"]])) {
+    dfv <- dfv %>% rename_("z" = "size")
+    type <- "bubble"
+  }
+  
+  
+  if (!is.null(dfv[["group"]])) 
+    dfv <- dfv %>% rename_("groupvar" = "group")
+  
+  if (!is.null(dfe[["width"]])) 
+    dfe <- dfe %>% rename_("lineWidth" = "width")
+  
+  if (is.null(dfe[["color"]])) 
+    dfe <- dfe %>% mutate("color" = hex_to_rgba("#d3d3d3", 0.5))
+  
+  dse <- dfe %>%
+    list.parse3() %>% 
+    map(function(x) {
+      # x <- sample( dfe %>% list.parse3(), 1)[[1]]
+      x$data <- list(
+        list(x = x$xf, y = x$yf),
+        list(x = x$xt, y = x$yt)
+      )
+      x[c("xf", "yf", "xt", "yt")] <- NULL
+      x
+      
+    })
+  
+  vattrs <- setdiff(names(dfv), c("x", "y", "z", "color", "label" , "name"))
+  tltip_fmt <- tooltip_table(
+    str_to_title(str_replace(vattrs, "_", " ")),
+    sprintf("{point.%s}", vattrs))
+  
+  hc <- highchart() %>% 
+    hc_chart(zoomType = "xy", type = "line") %>% 
+    hc_tooltip(
+      useHTML = TRUE
+    ) %>% 
+    hc_plotOptions(
+      line = list(enableMouseTracking = FALSE),
+      bubble = list(
+        marker = list(fillOpacity = 0.65),
+        minSize = 5, maxSize = 20)
+    ) %>% 
+    hc_add_theme(
+      hc_theme_null(legend = list(enabled = TRUE))
+    )
+  
+  hc <- hc %>% 
+    hc_add_serie(data = list.parse3(dfv),
+                 type = type, name = "nodes", zIndex = 3, 
+                 tooltip = list(
+                   headerFormat = as.character(tags$small("{point.key}")),
+                   pointFormat = tltip_fmt
+                 ), ...) 
+  
+  if (!is.null(dfv[["label"]])) {
+    hc <- hc %>% 
+      hc_add_serie(data = list.parse3(dfv %>% select_(.dots = c("x", "y", "label"))),
+                   type = "scatter", name = "labels", zIndex = 4,
+                   marker = list(radius = 0), enableMouseTracking = FALSE,
+                   dataLabels = list(enabled = TRUE, format = "{point.label}"))
+  }
+  
+  hc <- hc %>% hc_add_series(data = NULL, name = "edges", id = "e")
+ 
+  hc$x$hc_opts$series <- append(
+    hc$x$hc_opts$series,
+    dse
+  )
+  
+  hc 
+    
+}
+
 # # @export
 # hchart.seas <- function(object, ..., outliers = TRUE, trend = FALSE) {
 # 

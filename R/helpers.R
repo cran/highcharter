@@ -110,6 +110,31 @@ hc_get_colors <- function() {
   
 }
 
+#' Transform colors from hexadeximal format to rgba hc notation
+#' 
+#' @param x colors in hexadecimal format
+#' @param alpha alpha 
+#' 
+#' @examples 
+#' 
+#' hex_to_rgba(x <- hc_get_colors())
+#' 
+#'
+#' @importFrom grDevices col2rgb
+#' @importFrom tidyr unite_
+#' @export
+hex_to_rgba <- function(x, alpha = 1) {
+  
+  rgba <- x %>% 
+    col2rgb() %>% 
+    t() %>% 
+    as.data.frame() %>% 
+    unite_(col = "rgba", from = c("red", "green", "blue") , sep = ",")
+  
+  sprintf("rgba(%s,%s)", rgba[["rgba"]], alpha)
+  
+}  
+
 #' Get dash styles
 #'
 #' Get dash style to use on highcharts objects.
@@ -201,6 +226,93 @@ fa_icon_mark <- function(iconname = "circle"){
 
 }
 
+#' Helper for make table in tooltips 
+#' 
+#' Helper to make table in tooltips for the \code{pointFormat}
+#' parameter in \code{hc_tooltip}
+#'
+#' @param x A string vector with description text
+#' @param y A string with accesors ex: \code{point.series.name}, 
+#'   \code{point.x}
+#' @param title A title tag with accessor or string
+#' @param img Img tag
+#' @param ... html attributes for the table element
+#' 
+#' @examples 
+#' 
+#' x <- c("Income:", "Genre", "Runtime")
+#' y <- c("$ {point.y}", "{point.series.options.extra.genre}",
+#'        "{point.series.options.extra.runtime}")
+#' 
+#' tooltip_table(x, y)
+#' 
+#' @importFrom purrr map2
+#' @importFrom htmltools tags tagList
+#' @export
+tooltip_table <- function(x, y,
+                          title = NULL,
+                          img = NULL, ...) {
   
+  assertthat::assert_that(length(x) == length(y))
   
+  tbl <- map2(x, y, function(x, y){
+    tags$tr(
+      tags$th(x),
+      tags$td(y)
+    )
+  })
   
+  tbl <- tags$table(tbl, ...)
+  
+  if (!is.null(title))
+    tbl <- tagList(title, tbl)
+  
+  if (!is.null(img))
+    tbl <- tagList(tbl, img)
+  
+  as.character(tbl) 
+  
+}
+
+#' Create vector of color from vector
+#' 
+#' Using viridis
+#' 
+#' @param x A numeric, character or factor vector.
+#' @param option A character string indicating the colormap option to use.
+#' 
+#' @examples
+#' x <- runif(50)
+#' colorize_vector(x)
+#' 
+#' x <- sample(letters[1:4], size = 20, replace = TRUE)
+#' colorize_vector(x)
+#' 
+#' @importFrom viridisLite viridis
+#' @importFrom stats ecdf
+#' @importFrom stringr str_sub
+#' @export
+colorize_vector <- function(x, option = "D") {
+  
+  nunique <- length(unique(x))
+  
+  if (!is.numeric(x) | nunique < 10) {
+    
+    bcol <- str_sub(viridis(nunique, option = option), 0, 7)
+    y <- as.numeric(as.factor(x))
+    cols <- bcol[y]
+    
+  } else {
+    
+    nc <- 1000
+    
+    bcol <- str_sub(viridis(nc, option = option), 0, 7)
+    ecum <- ecdf(x)
+    
+    cols <- bcol[round(nc*ecum(x))]
+    
+  }
+  
+  cols
+  
+}
