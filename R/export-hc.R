@@ -1,4 +1,3 @@
-. <- NULL
 #' Function to export js file the configuration options
 #' @param hc A \code{A highcarts object}
 #' @param filename A string 
@@ -10,7 +9,7 @@
 #'   alert('Category: ' + this.category);
 #' }"
 #' 
-#' hc <- hc_demo() %>% 
+#' hc <- highcharts_demo() %>% 
 #'   hc_plotOptions(
 #'     series = list(
 #'       cursor = "pointer",
@@ -23,13 +22,16 @@
 #'  )
 #' 
 #' @importFrom jsonlite toJSON
-#' @importFrom stringr str_split str_c str_detect
+#' @importFrom stringr str_split str_c str_detect str_replace
 #' @importFrom utils head
 #' @export 
 export_hc <- function(hc, filename = NULL) {
   
   # filename <- "~/tets.js"
   # load("~/hc.Rdata")
+  
+  . <- NULL
+  
   stopifnot(!is.null(filename))
   
   if (!str_detect(filename, ".js$"))
@@ -46,11 +48,16 @@ export_hc <- function(hc, filename = NULL) {
   # function thing 
   fflag <- str_detect(jslns, "function()")
   if (any(fflag)) {
-    jslns <- ifelse(fflag, str_replace(jslns, "\"function", "function"), jslns)  
+    jslns <- ifelse(fflag, str_replace(jslns, "\"function", "function"), jslns)
     jslns <- ifelse(fflag, str_replace(jslns, "\",$", ","), jslns)
     jslns <- ifelse(fflag, str_replace(jslns, "\"$", ""), jslns)
     jslns <- ifelse(fflag,
-                    str_replace_all(jslns, "\\\\n", str_c("\\\\n", str_extract(jslns, "^\\s+") )),
+                    str_replace_all(jslns,
+                                    "\\\\n",
+                                    str_c("\\\\n",
+                                          str_extract(jslns, "^\\s+")
+                                          )
+                                    ),
                     jslns)  
   }
   
@@ -65,4 +72,3 @@ export_hc <- function(hc, filename = NULL) {
     writeLines(jslns, filename)
   
 }
-

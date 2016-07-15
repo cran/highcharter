@@ -3,11 +3,14 @@
 \name{hc_xAxis}
 \alias{hc_xAxis}
 \alias{hc_yAxis}
+\alias{hc_yAxis_multiples}
 \title{Adding axis options to highchart objects}
 \usage{
 hc_xAxis(hc, ...)
 
 hc_yAxis(hc, ...)
+
+hc_yAxis_multiples(hc, ...)
 }
 \arguments{
 \item{hc}{A \code{highchart} \code{htmlwidget} object.}
@@ -40,5 +43,14 @@ highchart() \%>\%
              list(from = 25, to = 80, color = "rgba(100, 0, 0, 0.1)",
                   label = list(text = "This is a plotBand")))) 
                   
+ highchart() \%>\% 
+   hc_yAxis_multiples(
+     list(top = "0\%", height = "30\%", lineWidth = 3),
+     list(top = "30\%", height = "70\%", offset = 0,
+          showFirstLabel = FALSE, showLastLabel = FALSE)
+   ) \%>\% 
+   hc_add_series(data = rnorm(10)) \%>\% 
+   hc_add_series(data = rexp(10), type = "spline", yAxis = 1)
+            
 }
 

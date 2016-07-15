@@ -14,8 +14,8 @@ Dark unica theme for highcharts
 }
 \examples{
 
-hc_demo() \%>\% 
-  hc_add_theme(hc_theme_darkunica())
+highcharts_demo() \%>\% 
+ hc_add_theme(hc_theme_darkunica())
 
 }
 

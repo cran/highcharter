@@ -5,7 +5,7 @@
 \title{Create a Highcharts chart widget}
 \usage{
 highchart2(hc_opts = list(), theme = NULL, width = NULL, height = NULL,
-  debug = FALSE)
+  elementId = NULL, debug = FALSE)
 }
 \arguments{
 \item{hc_opts}{A \code{list} object containing options defined as 
@@ -17,10 +17,15 @@ highchart2(hc_opts = list(), theme = NULL, width = NULL, height = NULL,
 
 \item{height}{A numeric input in pixels.}
 
+\item{elementId}{Use an explicit element ID for the widget.}
+
 \item{debug}{A boolean value if you want to print in the browser console the 
 parameters given to \code{highchart}.}
 }
 \description{
+This widgets don't support options yet.
+}
+\details{
 This function creates a Highchart chart using \pkg{htmlwidgets}. The
 widget can be rendered on HTML pages generated from R Markdown, Shiny, or
 other applications.

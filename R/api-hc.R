@@ -11,11 +11,10 @@ validate_args <- function(name, lstargs) {
     
     chrargs <- paste0("'", chrargs, "'", collapse = ", ")
     
-    if (lenlst == 1) {
-      stop(chrargs, " argument is not named in ", paste0("hc_", name), call. = FALSE)
-    } else {
-      stop(chrargs, " arguments are not named in ", paste0("hc_", name), call. = FALSE)
-    }
+    txt <- ifelse(lenlst == 1, " is ", "s are ")
+    
+    stop(chrargs, " argument", txt, "not named in ", paste0("hc_", name),
+         call. = FALSE)
     
   }
   
@@ -98,13 +97,18 @@ hc_chart <- function(hc, ...) {
 #' cols <- viridis(3)
 #' cols <- substr(cols, 0, 7)
 #' 
-#' hc_demo() %>% 
+#' highcharts_demo() %>% 
 #'   hc_colors(cols)
 #'
 #' 
 #' @export
 hc_colors <- function(hc, colors) {
   
+  assertthat::assert_that(is.vector(colors))
+  
+  if (length(colors) == 1)
+    colors <- list(colors)
+
   hc$x$hc_opts$colors <- colors
   
   hc
@@ -142,6 +146,15 @@ hc_colors <- function(hc, colors) {
 #'              list(from = 25, to = 80, color = "rgba(100, 0, 0, 0.1)",
 #'                   label = list(text = "This is a plotBand")))) 
 #'                   
+#'  highchart() %>% 
+#'    hc_yAxis_multiples(
+#'      list(top = "0%", height = "30%", lineWidth = 3),
+#'      list(top = "30%", height = "70%", offset = 0,
+#'           showFirstLabel = FALSE, showLastLabel = FALSE)
+#'    ) %>% 
+#'    hc_add_series(data = rnorm(10)) %>% 
+#'    hc_add_series(data = rexp(10), type = "spline", yAxis = 1)
+#'             
 #' @export
 hc_xAxis  <- function(hc, ...) {
   
@@ -154,6 +167,90 @@ hc_xAxis  <- function(hc, ...) {
 hc_yAxis  <- function(hc, ...) {
   
   .hc_opt(hc, "yAxis", ...)
+  
+}
+
+#' @rdname hc_xAxis
+#' @export
+hc_yAxis_multiples <- function(hc, ...) {
+  
+  # print(length(list(...)));  print(length(list(...)[[1]]));
+  # print(class(list(...)));  print(class(list(...)[[1]]))
+  
+  if (length(list(...)) == 1 & class(list(...)[[1]]) == "hc_yaxis_list") {
+    hc$x$hc_opts$yAxis <- list(...)[[1]]
+  } else {
+    hc$x$hc_opts$yAxis <- list(...)
+  }
+    
+  hc
+  
+}
+
+#' Creating multiples yAxis for add a highcharts
+#' 
+#' @param naxis Number of axis an integer.
+#' @param heights A numeric vector. This values will be normalized.
+#' @param sep A numeric value for the separation (in percentage) for the panes.
+#' @param offset A numeric value (in percentage).
+#' @param turnopposite A logical value to turn the side of each axis or not.
+#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#yAxis}. 
+#' 
+#' @examples 
+#' 
+#' highchart() %>% 
+#'    hc_yAxis_multiples(create_yaxis(naxis = 2, heights = c(2, 1))) %>% 
+#'    hc_add_series(data = c(1,3,2), yAxis = 0) %>% 
+#'    hc_add_series(data = c(20, 40, 10), yAxis = 1)
+#'    
+#' 
+#' highchart() %>% 
+#'   hc_yAxis_multiples(create_yaxis(naxis = 3, lineWidth = 2, title = list(text = NULL))) %>% 
+#'   hc_add_series(data = c(1,3,2)) %>% 
+#'   hc_add_series(data = c(20, 40, 10), yAxis = 1) %>% 
+#'   hc_add_series(data = c(200, 400, 500), type = "column", yAxis = 2) %>% 
+#'   hc_add_series(data = c(500, 300, 400), type = "column", yAxis = 2)  
+#'    
+#' @importFrom dplyr bind_cols
+#' @export
+create_yaxis <- function(naxis = 2, heights = 1, sep = 0.01,
+                         offset = 0, turnopposite = TRUE, ...) {
+  
+  pcnt <- function(x) paste0(x * 100, "%")
+  
+  heights <- rep(heights, length = naxis)
+  
+  heights <- (heights / sum(heights)) %>% 
+    map(function(x) c(x, sep)) %>% 
+    unlist() %>% 
+    head(-1) %>%
+    { . / sum(.) } %>% 
+    round(5) 
+  
+  tops <- cumsum(c(0, head(heights, -1)))
+  
+  tops <- pcnt(tops)
+  heights <- pcnt(heights)
+  
+  dfaxis <- data_frame(height = heights, top = tops, offset = offset)
+
+  dfaxis <- dfaxis %>% dplyr::filter(seq(1:nrow(dfaxis)) %% 2 != 0)
+  
+  if (turnopposite) {
+    ops <- rep_len(c(FALSE, TRUE), length.out = nrow(dfaxis))
+    dfaxis <- dfaxis %>%
+      mutate(opposite = ops)
+  }
+
+  dfaxis <- bind_cols(dfaxis, data_frame(nid = seq(naxis), ...))
+
+  yaxis <- list_parse(dfaxis)
+  
+  # yaxis <- map(yaxis, function(x) c(x, ...))
+  
+  class(yaxis) <- "hc_yaxis_list"
+  
+  yaxis
   
 }
 
@@ -396,15 +493,19 @@ hc_add_series <- function(hc, ...) {
   
   validate_args("add_series", eval(substitute(alist(...))))
   
-  hc$x$hc_opts$series <- append(hc$x$hc_opts$series, list(list(...)))
+  dots <- list(...)
+  
+  if (is.numeric(dots$data) & length(dots$data) == 1) {
+    dots$data <- list(dots$data)
+  }
+    
+  lst <- do.call(list, dots)
+  
+  hc$x$hc_opts$series <- append(hc$x$hc_opts$series, list(lst))
   
   hc
   
 }
-
-#' @rdname hc_add_series
-#' @export
-hc_add_serie <- hc_add_series
 
 #' Removing series to highchart objects
 #'

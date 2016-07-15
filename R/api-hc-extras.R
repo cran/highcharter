@@ -13,7 +13,7 @@
 #' df <- expand.grid(seq(12) - 1, seq(nyears) - 1)
 #' df$value <- abs(seq(nrow(df)) + 10 * rnorm(nrow(df))) + 10
 #' df$value <- round(df$value, 2)
-#' ds <- list.parse2(df)
+#' ds <- list_parse2(df)
 #' 
 #' 
 #' hc <- highchart() %>% 
@@ -35,7 +35,7 @@
 #' stops <- data.frame(q = 0:n/n,
 #'                     c = substring(viridis(n + 1), 0, 7),
 #'                     stringsAsFactors = FALSE)
-#' stops <- list.parse2(stops)
+#' stops <- list_parse2(stops)
 #' 
 #' hc_colorAxis(hc, stops = stops, max = 75) 
 #' 
@@ -67,7 +67,7 @@ hc_colorAxis  <- function(hc, ...) {
 #' 
 #' df
 #' 
-#' ds <- list.parse3(df)
+#' ds <- list_parse(df)
 #' names(ds) <- NULL
 #' str(ds)
 #' 
@@ -112,11 +112,11 @@ hc_colorAxis  <- function(hc, ...) {
 #'   
 #' }
 #' 
-#' dsan <- second_el_to_numeric(list.parse2(dfan))
+#' dsan <- second_el_to_numeric(list_parse2(dfan))
 #' 
-#' dsfru <- second_el_to_numeric(list.parse2(dffru))
+#' dsfru <- second_el_to_numeric(list_parse2(dffru))
 #' 
-#' dscar <- second_el_to_numeric(list.parse2(dfcar))
+#' dscar <- second_el_to_numeric(list_parse2(dfcar))
 #' 
 #' 
 #' hc <- hc %>% 
@@ -214,7 +214,6 @@ hc_mapNavigation <- function(hc, ...) {
 #' 
 #' Helper function to use the fill patter plugin http://www.highcharts.com/plugin-registry/single/9/Pattern-Fill.
 #' 
-#' 
 #' @param hc A \code{highchart} \code{htmlwidget} object. 
 #' @param ... Arguments defined in \url{http://www.highcharts.com/plugin-registry/single/9/Pattern-Fill}. 
 #' 
@@ -254,4 +253,37 @@ hc_pane <- function(hc, ...) {
   
   .hc_opt(hc, "pane", ...)
   
+}
+
+#' Adding options to Motion options to highcharts objects
+#' 
+#' The Motion Highcharts Plugin adds an interactive HTML5 player
+#' to any Highcharts chart (Highcharts, Highmaps and Highstock).
+#' 
+#' @param hc A \code{highchart} \code{htmlwidget} object. 
+#' @param ... Arguments defined in \url{https://github.com/larsac07/Motion-Highcharts-Plugin/wiki}. 
+#' 
+#' @export
+hc_motion <- function(hc, ...) {
+  
+  .hc_opt(hc, "motion", ...)
+  
+}
+
+#' Setting elementId
+#' 
+#' Function to modify the \code{id} for the container.
+#' 
+#' @param hc A \code{highchart} \code{htmlwidget} object. 
+#' @param id A string
+#' 
+#' @examples 
+#' 
+#' hchart(rnorm(10)) %>% 
+#'   hc_elementId("newid")
+#' 
+#' @export
+hc_elementId <- function(hc, id = NULL) {
+  hc$elementId <- as.character(id)
+  hc
 }

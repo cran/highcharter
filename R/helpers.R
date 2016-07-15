@@ -1,43 +1,59 @@
 #' Convert an object to list with identical structure
 #'
-#' This function is similiar to \code{rlist::list.parse} but this removes names. 
+#' This functions are similiar to \code{rlist::list.parse} but this removes
+#' names.
 #' 
 #' @param df A data frame to parse to list
 #' 
 #' @examples 
 #' 
-#' x <- data.frame(a=1:3,type=c('A','C','B'), stringsAsFactors = FALSE)
+#' x <- data.frame(a=1:3, type=c('A','C','B'), stringsAsFactors = FALSE)
 #' 
-#' list.parse2(x)
+#' list_parse(x)
 #' 
-#' list.parse3(x)
+#' list_parse2(x)
 #' 
+#' @importFrom purrr transpose
 #' @export
-list.parse2 <- function(df) {
+list_parse <- function(df) {
   
   assertthat::assert_that(is.data.frame(df))
   
-  res <- apply(df, 1, function(r) as.list(as.vector(r)))
-  
-  names(res) <- NULL
-  
-  res
+  map_if(df, is.factor, as.character) %>% 
+    as_data_frame() %>% 
+    list.parse() %>% 
+    setNames(NULL)
   
 }
 
 #' @importFrom rlist list.parse
-#' @rdname list.parse2  
+#' @rdname list_parse  
 #' @export 
-list.parse3 <- function(df) {
+list_parse2 <- function(df) {
   
   assertthat::assert_that(is.data.frame(df))
   
-  res <- list.parse(df)
+  list_parse(df) %>% 
+    map(setNames, NULL)
   
-  names(res) <- NULL
+}
+
+#' @rdname list_parse  
+#' @export 
+list.parse2 <- function(df) {
   
-  res
+  .Deprecated("list_parse2")
   
+  list_parse2(df) 
+}
+
+#' @rdname list_parse  
+#' @export 
+list.parse3 <- function(df) {
+  
+  .Deprecated("list_parse")
+  
+  list_parse(df) 
 }
 
 #' String to 'id' format
@@ -63,8 +79,7 @@ str_to_id <- function(x) {
     str_replace_all("\\\\|/", "_") %>% 
     str_replace_all("\\[|\\]", "_") %>% 
     str_replace_all("_+", "_") %>% 
-    str_replace_all("_$|^_", "") %>% 
-    iconv("latin1", "ASCII", sub = "")
+    str_replace_all("_$|^_", "")
   
 }
 
@@ -76,37 +91,21 @@ str_to_id <- function(x) {
 #' 
 #' @examples 
 #' 
-#' datetime_to_timestamp(dt = as.Date(c("2015-05-08", "2015-09-12"), format = "%Y-%m-%d"))
+#' datetime_to_timestamp(
+#'   as.Date(c("2015-05-08", "2015-09-12"),
+#'   format = "%Y-%m-%d"))
 #' 
 #' @export
 datetime_to_timestamp <- function(dt) {
   
-  # http://stackoverflow.com/questions/10160822/handling-unix-timestamp-with-highcharts 
+  # http://stackoverflow.com/questions/10160822/
   assertthat::assert_that(assertthat::is.date(dt) | assertthat::is.time(dt))
   
-  tmstmp <- dt %>% 
-    as.POSIXct(dt) %>% 
-    as.numeric() 
+  tmstmp <- as.numeric(as.POSIXct(dt))
   
   tmstmp <- 1000 * tmstmp
   
   tmstmp
-  
-}
-
-#' Get default colors for Highcharts theme
-#'
-#' Get color used in highcharts charts.
-#' 
-#' @examples 
-#' 
-#' hc_get_colors()[1:5]
-#' 
-#' @export
-hc_get_colors <- function() {
-  
-  c("#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
-    "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1")
   
 }
 
@@ -117,7 +116,7 @@ hc_get_colors <- function() {
 #' 
 #' @examples 
 #' 
-#' hex_to_rgba(x <- hc_get_colors())
+#' hex_to_rgba(x <- c("#440154", "#21908C", "#FDE725"))
 #' 
 #'
 #' @importFrom grDevices col2rgb
@@ -125,13 +124,13 @@ hc_get_colors <- function() {
 #' @export
 hex_to_rgba <- function(x, alpha = 1) {
   
-  rgba <- x %>% 
+  x %>% 
     col2rgb() %>% 
     t() %>% 
     as.data.frame() %>% 
-    unite_(col = "rgba", from = c("red", "green", "blue") , sep = ",")
-  
-  sprintf("rgba(%s,%s)", rgba[["rgba"]], alpha)
+    unite_(col = "rgba", from = c("red", "green", "blue"), sep = ",") %>% 
+    .[[1]] %>% 
+    sprintf("rgba(%s,%s)", ., alpha)
   
 }  
 
@@ -141,10 +140,10 @@ hex_to_rgba <- function(x, alpha = 1) {
 #' 
 #' @examples 
 #' 
-#' hc_get_dash_styles()[1:5]
+#' dash_styles()[1:5]
 #' 
 #' @export
-hc_get_dash_styles <- function() {
+dash_styles <- function() {
   
   c("Solid", "ShortDash", "ShortDot", "ShortDashDot", "ShortDashDotDot",
     "Dot", "Dash", "LongDash", "DashDot", "LongDashDot", "LongDashDotDot")
@@ -157,17 +156,23 @@ hc_get_dash_styles <- function() {
 #' 
 #' @examples 
 #' 
-#' hc_demo()
+#' highcharts_demo()
 #' 
 #' @export
-hc_demo <- function() {
+highcharts_demo <- function() {
 
   dtemp <- structure(
-    list(month = c("Jan", "Feb", "Mar", "Apr", "May", "Jun",  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
-         tokyo = c(7, 6.9,  9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6),
-         new_york = c(-0.2,  0.8, 5.7, 11.3, 17, 22, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5),
-         berlin = c(-0.9,  0.6, 3.5, 8.4, 13.5, 17, 18.6, 17.9, 14.3, 9, 3.9, 1),
-         london = c(3.9,  4.2, 5.7, 8.5, 11.9, 15.2, 17, 16.6, 14.2, 10.3, 6.6, 4.8)),
+    list(
+      month = c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
+      tokyo = c(7, 6.9,  9.5, 14.5, 18.2, 21.5,
+                25.2, 26.5, 23.3, 18.3, 13.9, 9.6),
+      new_york = c(-0.2,  0.8, 5.7, 11.3, 17, 22, 
+                   24.8, 24.1, 20.1, 14.1, 8.6, 2.5),
+      berlin = c(-0.9,  0.6, 3.5, 8.4, 13.5, 17,
+                 18.6, 17.9, 14.3, 9, 3.9, 1),
+      london = c(3.9,  4.2, 5.7, 8.5, 11.9, 15.2,
+                 17, 16.6, 14.2, 10.3, 6.6, 4.8)),
     .Names = c("month", "tokyo", "new_york", "berlin", "london"),
     row.names = c(NA, 12L ), class = c("tbl_df", "tbl", "data.frame"))
   
@@ -276,23 +281,49 @@ tooltip_table <- function(x, y,
 
 #' Create vector of color from vector
 #' 
-#' Using viridis
+#' @param x A numeric, character or factor object.
+#' @param colors A character string of colors (ordered) to colorize \code{x}
+#' @examples 
 #' 
-#' @param x A numeric, character or factor vector.
+#' colorize(runif(10))
+#' 
+#' colorize(LETTERS[rbinom(20, 5, 0.5)], c("#FF0000", "#00FFFF"))
+#' 
+#' @importFrom grDevices colorRampPalette
+#' @importFrom stats ecdf
+#' @export
+colorize <- function(x, colors = c("#440154", "#21908C", "#FDE725")) {
+  
+  nuniques <- length(unique(x))
+  palcols <- grDevices::colorRampPalette(colors)(nuniques)
+  
+  if (!is.numeric(x) | nuniques < 10) {
+    
+    y <- as.numeric(as.factor(x))
+    xcols <- palcols[y]
+    
+  } else {
+    
+    ecum <- ecdf(x)
+    xcols <- palcols[ceiling(nuniques * ecum(x))]
+    
+  }
+  
+  xcols
+  
+}
+
+#' Create vector of color from vector
+#' 
+#' @param x A numeric, character or factor object.
 #' @param option A character string indicating the colormap option to use.
 #' 
-#' @examples
-#' x <- runif(50)
-#' colorize_vector(x)
-#' 
-#' x <- sample(letters[1:4], size = 20, replace = TRUE)
-#' colorize_vector(x)
-#' 
 #' @importFrom viridisLite viridis
-#' @importFrom stats ecdf
 #' @importFrom stringr str_sub
 #' @export
 colorize_vector <- function(x, option = "D") {
+  
+  .Deprecated("colorize")
   
   nunique <- length(unique(x))
   
@@ -309,10 +340,197 @@ colorize_vector <- function(x, option = "D") {
     bcol <- str_sub(viridis(nc, option = option), 0, 7)
     ecum <- ecdf(x)
     
-    cols <- bcol[round(nc*ecum(x))]
+    cols <- bcol[round(nc * ecum(x))]
     
   }
   
   cols
+  
+}
+
+#' Function to create \code{stops} argument in \code{hc_colorAxis}
+#' 
+#' @param n A numeric indicating how much quantiles generate.
+#' @param colors A character string of colors (ordered)
+#' 
+#' @examples
+#' 
+#' color_stops(5)
+#' 
+#' @export
+color_stops <- function(n = 10, colors = c("#440154", "#21908C", "#FDE725")) {
+  
+  palcols <- grDevices::colorRampPalette(colors)(n)
+  
+  list_parse2(
+    data.frame(
+      q = seq(0, n - 1) / (n - 1),
+      c = palcols
+      )
+    )
+}
+
+#' Function to create \code{dataClasses} argument in \code{hc_colorAxis}
+#' 
+#' @param breaks A numeric vector 
+#' @param colors A character string of colors (ordered)
+#' 
+#' @examples
+#' 
+#' color_classes(c(0, 10, 20, 50))
+#' 
+#' @export
+color_classes <- function(breaks = NULL,
+                          colors = c("#440154", "#21908C", "#FDE725")) {
+  
+  lbrks <- length(breaks)
+  
+  list_parse(
+    data.frame(
+      from = breaks[-lbrks],
+      to = breaks[-1],
+      color = grDevices::colorRampPalette(colors)(lbrks - 1),
+      stringsAsFactors = FALSE
+    )
+  )
+  
+}
+
+#' Auxiliar function to get series and options from tidy frame for hchart.data.frame
+#' 
+#' This function is used in hchart.data.frame and hc_add_series_df
+#' 
+#' @param data A \code{data.frame} object.
+#' @param type The type of chart. Possible values are line, scatter, point, column.
+#' @param ... Aesthetic mappings as \code{x y group color low high}.
+#' 
+#' @examples 
+#' 
+#' get_hc_series_from_df(iris, type = "point", x = Sepal.Width)
+#' 
+#' @importFrom tibble has_name
+#' @export
+get_hc_series_from_df <- function(data, type = NULL, ...) {
+  
+  assertthat::assert_that(is.data.frame(data))
+  stopifnot(!is.null(type))
+  
+  pars <- eval(substitute(alist(...)))
+  parsc <- map(pars, as.character)
+  
+  data <- mutate(data, ...)
+  data <- ungroup(data)
+  
+  # check type
+  type <- ifelse(type == "point", "scatter", type)
+  type <- ifelse("size" %in% names(data) & type == "scatter", "bubble", type)
+  
+  # heatmap
+  if (type == "heatmap") {
+    if (!is.numeric(data[["x"]])) {
+      data[["xf"]] <- as.factor(data[["x"]])
+      data[["x"]] <- as.numeric(as.factor(data[["x"]])) - 1
+    }
+    if (!is.numeric(data[["y"]])) {
+      data[["yf"]] <- as.factor(data[["y"]])
+      data[["y"]] <- as.numeric(as.factor(data[["y"]])) - 1
+    }
+  }
+  
+  # x
+  if (has_name(parsc, "x")) {
+    if (is.Date(data[["x"]])) {
+      data[["x"]] <- datetime_to_timestamp(data[["x"]])
+      
+    } else if (is.character(data[["x"]]) | is.factor(data[["x"]])) {
+      data[["name"]] <- data[["x"]]
+      data[["x"]] <- NULL
+    } 
+  }
+  
+  # color
+  if (has_name(parsc, "color")) {
+    if (type == "treemap") {
+      data <- rename_(data, "colorValue" = "color")
+    } else {
+      data  <- mutate_(data, "colorv" = "color",
+                       "color" = "highcharter::colorize(color)")  
+    }
+  }
+  
+  # size
+  if (has_name(parsc, "size") & type %in% c("bubble", "scatter"))
+    data <- mutate_(data, "z" = "size")
+  
+  # group 
+  if (!has_name(parsc, "group"))
+    data[["group"]] <- "Series"
+  
+  data[["charttpye"]] <- type
+  
+  dfs <- data %>% 
+    group_by_("group", "charttpye") %>% 
+    do(data = list_parse(select_(., quote(-group), quote(-charttpye)))) %>% 
+    ungroup() %>% 
+    rename_("name" = "group", "type" = "charttpye")
+  
+  if (!has_name(parsc, "group"))
+    dfs[["name"]] <- NULL
+  
+  series <- list_parse(dfs)
+  
+  series
+  
+}
+
+#' @rdname get_hc_series_from_df
+#' @export
+get_hc_options_from_df <- function(data, type) {
+  
+  opts <- list()
+  
+  # x
+  if (has_name(data, "x")) {
+    if (is.Date(data[["x"]])) {
+      opts$xAxis_type <- "datetime"
+    } else if (is.character(data[["x"]]) | is.factor(data[["x"]])) {
+      opts$xAxis_type <- "category"
+    } else {
+      opts$xAxis_type <- "linear"
+    }
+  }
+  
+  # y
+  if (has_name(data, "x")) {
+    if (is.Date(data[["y"]])) {
+      opts$yAxis_type <- "datetime"
+    } else if (is.character(data[["y"]]) | is.factor(data[["y"]])) {
+      opts$yAxis_type <- "category"
+    } else {
+      opts$yAxis_type <- "linear"
+    }
+  }  
+  
+  # showInLegend
+  opts$series_plotOptions_showInLegend <- "group" %in% names(data)
+  
+  # colorAxis
+  opts$add_colorAxis <- 
+    (type == "treemap" & "color" %in% names(data)) | (type == "heatmap")
+  
+  # series marker enabled
+  opts$series_marker_enabled <- !(type %in% c("line", "spline"))
+  
+  # heatmap
+  if (type == "heatmap") {
+    if (!is.numeric(data[["x"]])) {
+      opts$xAxis_categories <- levels(as.factor(data[["x"]]))
+    }
+    if (!is.numeric(data[["y"]])) {
+      opts$yAxis_categories <- levels(as.factor(data[["y"]]))
+    }
+  }
+  
+  opts
   
 }

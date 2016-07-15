@@ -6,7 +6,7 @@
 #' 
 #' @examples
 #' 
-#' hc_demo() %>% 
+#' highcharts_demo() %>% 
 #'   hc_add_theme(hc_theme_null())
 #'   
 #' @export
@@ -25,7 +25,9 @@ hc_theme_null <- function(...){
       )
     ),
     legend = list(
-      enabled = FALSE
+      enabled = TRUE,
+      align = "right",
+      verticalAlign = "bottom"
       ),
     credits = list(
       enabled = FALSE

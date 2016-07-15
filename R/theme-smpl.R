@@ -1,13 +1,13 @@
 #' Simple Theme
 #' 
 #' Desing inspired by \url{https://github.com/hrbrmstr/hrbrmisc/blob/master/R/ggplot.r}
-#' and color by \url{http://www.materialui.co/flatuicolors}
+#' and color by \url{https://www.materialui.co/flatuicolors}
 #' 
 #' @param ... Named argument to modify the theme
 #' 
 #' @examples 
 #' 
-#' hc_demo() %>% 
+#' highcharts_demo() %>% 
 #'   hc_add_theme(hc_theme_smpl())
 #' 
 #' @export
@@ -61,4 +61,3 @@ hc_theme_smpl <- function(...){
   theme
   
 }
-

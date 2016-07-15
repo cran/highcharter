@@ -7,19 +7,11 @@
 colorize_vector(x, option = "D")
 }
 \arguments{
-\item{x}{A numeric, character or factor vector.}
+\item{x}{A numeric, character or factor object.}
 
 \item{option}{A character string indicating the colormap option to use.}
 }
 \description{
-Using viridis
-}
-\examples{
-x <- runif(50)
-colorize_vector(x)
-
-x <- sample(letters[1:4], size = 20, replace = TRUE)
-colorize_vector(x)
-
+Create vector of color from vector
 }
 

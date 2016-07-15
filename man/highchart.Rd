@@ -4,8 +4,9 @@
 \alias{highchart}
 \title{Create a Highcharts chart widget}
 \usage{
-highchart(hc_opts = list(), theme = NULL, type = "chart", width = NULL,
-  height = NULL, debug = FALSE)
+highchart(hc_opts = list(), theme = getOption("highcharter.theme"),
+  type = "chart", width = NULL, height = NULL, elementId = NULL,
+  debug = FALSE)
 }
 \arguments{
 \item{hc_opts}{A \code{list} object containing options defined as 
@@ -19,6 +20,8 @@ Highmap. Options are \code{"chart"}, \code{"stock"} and \code{"map"}.}
 \item{width}{A numeric input in pixels.}
 
 \item{height}{A numeric input in pixels.}
+
+\item{elementId}{Use an explicit element ID for the widget.}
 
 \item{debug}{A boolean value if you want to print in the browser console the 
 parameters given to \code{highchart}.}

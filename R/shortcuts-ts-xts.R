@@ -23,6 +23,7 @@
 #' }
 #' 
 #' @importFrom zoo as.Date
+#' @importFrom assertthat is.date assert_that
 #' 
 #' @export 
 hc_add_series_times_values <- function(hc, dates, values, ...) {
@@ -31,17 +32,13 @@ hc_add_series_times_values <- function(hc, dates, values, ...) {
   
   timestamps <- datetime_to_timestamp(dates)
   
-  ds <- list.parse2(data.frame(timestamps, values))
+  ds <- list_parse2(data.frame(timestamps, values))
   
   hc %>% 
     hc_xAxis(type = "datetime") %>% 
     hc_add_series(marker = list(enabled = FALSE), data = ds, ...)
   
 }
-
-#' @rdname hc_add_series_times_values
-#' @export
-hc_add_serie_times_values <- hc_add_series_times_values
 
 #' Shorcut for create/add time series charts from a ts object
 #'
@@ -75,19 +72,15 @@ hc_add_series_ts <- function(hc, ts, ...) {
   
   assertthat::assert_that(is.ts(ts), .is_highchart(hc))
   
-  # http://stackoverflow.com/questions/29202021/r-how-to-extract-dates-from-a-time-series
+  # http://stackoverflow.com/questions/29202021/
   dates <- time(ts) %>% 
     zoo::as.Date()
   
   values <- as.vector(ts)
   
-  hc %>% hc_add_serie_times_values(dates, values, ...)
+  hc %>% hc_add_series_times_values(dates, values, ...)
   
 }
-
-#' @rdname hc_add_series_ts
-#' @export
-hc_add_serie_ts <- hc_add_series_ts
 
 #' Shorcut for create highstock chart from \code{xts} object
 #'
@@ -120,19 +113,15 @@ hc_add_series_xts <- function(hc, x, ...) {
   
   assertthat::assert_that(.is_highchart(hc), is.xts(x))
   
-  hc$x$type = "stock"
+  hc$x$type <- "stock"
   
   timestamps <- datetime_to_timestamp(time(x))
   
-  ds <- list.parse2(data.frame(timestamps, as.vector(x)))
+  ds <- list_parse2(data.frame(timestamps, as.vector(x)))
   
   hc %>%  hc_add_series(data = ds, ...)
   
 }
-
-#' @rdname hc_add_series_xts
-#' @export
-hc_add_serie_xts <- hc_add_series_xts
 
 #' Shorcut for create candlestick charts
 #'
@@ -181,13 +170,13 @@ hc_add_series_ohlc <- function(hc, x, type = "candlestick", ...){
   
   assertthat::assert_that(.is_highchart(hc), is.xts(x), is.OHLC(x))
   
-  hc$x$type = "stock"
+  hc$x$type <- "stock"
   
   time <- datetime_to_timestamp(time(x))
   
   xdf <- cbind(time, as.data.frame(x))
   
-  xds <- list.parse2(xdf)
+  xds <- list_parse2(xdf)
   
   nm <- ifelse(!is.null(list(...)[["name"]]),
                list(...)[["name"]],
@@ -200,10 +189,6 @@ hc_add_series_ohlc <- function(hc, x, type = "candlestick", ...){
   hc
   
 }
-
-#' @rdname hc_add_series_ohlc
-#' @export
-hc_add_serie_ohlc <- hc_add_series_ohlc
 
 #' Shorcut for add flags to highstock chart
 #'
@@ -249,12 +234,8 @@ hc_add_series_flags <- function(hc, dates,
   dfflags <- data_frame(x = datetime_to_timestamp(dates),
                         title = title, text = text)
   
-  dsflags <- list.parse3(dfflags)
+  dsflags <- list_parse(dfflags)
   
   hc %>% hc_add_series(data = dsflags, onSeries = id, type = "flags", ...)
   
 }
-
-#' @rdname hc_add_series_flags
-#' @export
-hc_add_serie_flags <- hc_add_series_flags
