@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme-smpl.R
 \name{hc_theme_smpl}
 \alias{hc_theme_smpl}
-\title{Simple Theme}
+\title{Simple theme for highcharts}
 \usage{
 hc_theme_smpl(...)
 }
@@ -10,7 +10,7 @@ hc_theme_smpl(...)
 \item{...}{Named argument to modify the theme}
 }
 \description{
-Desing inspired by \url{https://github.com/hrbrmstr/hrbrmisc/blob/master/R/ggplot.r}
+Desing inspired by \url{https://github.com/hrbrmstr/hrbrmisc/blob/master/R/themes.r}
 and color by \url{https://www.materialui.co/flatuicolors}
 }
 \examples{

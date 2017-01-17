@@ -9,9 +9,12 @@
 .onAttach <- function(libname = find.package("highcharter"),
                       pkgname = "highcharter") {
 
-  packageStartupMessage("Highcharts (www.highcharts.com) is a")
-  packageStartupMessage("Highsoft software product which is")
-  packageStartupMessage("not free for commercial and Governmental use")
+  packageStartupMessage(
+    "Highcharts (www.highcharts.com) is a Highsoft software product which is"
+    )
+  packageStartupMessage(
+    "not free for commercial and Governmental use"
+    )
   
 }
 
@@ -77,16 +80,26 @@
       plotOptions = list(
         series = list(
           turboThreshold = 0
-          )
+          ),
+        treemap = list(layoutAlgorithm = "squarified"),
+        bubble = list(minSize = 5, maxSize = 25)
+        ),
+      annotationsOptions = list(
+        enabledButtons = FALSE
+        ),
+      tooltip = list(
+        delayForDisplay = 10
         )
       )
     )
   
   options(
-    highcharter.theme = hc_theme(
-      chart = list(backgroundColor = "transparent")
-      )
+    highcharter.theme = hc_theme(chart = list(backgroundColor = "transparent")),
+    highcharter.verbose = FALSE,
+    highcharter.debug = FALSE,
+    highcharter.download_map_data = TRUE,
+    # gsub("FF$", "", viridisLite::viridis(10, option = "B", begin = 0.2))
+    highcharter.color_palette = c("#420A68", "#66166E", "#8B226A", "#AE305C", "#CF4446",
+                                  "#E8602C", "#F8850F", "#FCAF13", "#F5DC4D", "#FCFFA4")
     )
-  
- 
 }

@@ -3,33 +3,40 @@ dependencies:
     version: 1.11.1
     src: "htmlwidgets/lib/jquery"
     script: jquery.min.js
-  - name: underscore
-    version: 1.8.3
-    src: "htmlwidgets/lib/underscore-1.8.3"
-    script: underscore-min.js    
+  - name: proj4js
+    version: 2.3.15
+    src: "htmlwidgets/lib/proj4js"
+    script: proj4.js
   - name: highcharts
-    version: 4.2.4
-    src: "htmlwidgets/lib/highcharts-4.2.4"
+    version: 5.0.6
+    src: "htmlwidgets/lib/highcharts-5.0.6"
     script:
     - highstock.js
-    - highcharts-more.js
     - highcharts-3d.js
-    - modules/exporting.js
-    # - modules/offline-exporting.js
-    - modules/drilldown.js
+    - highcharts-more.js
+    - modules/annotations.js
+    - modules/broken-axis.js
     - modules/data.js
+    - modules/drilldown.js
+    - modules/exporting.js
+    - modules/funnel.js
     - modules/heatmap.js
     - modules/map.js
-    - modules/treemap.js
-    - modules/funnel.js
+    - modules/no-data-to-display.js
+    - modules/offline-exporting.js
     - modules/solid-gauge.js
-    - modules/reset.js
+    - modules/treemap.js
     - plugins/annotations.js
-    - plugins/motion.js    
+    - plugins/draggable-legend.js
     - plugins/draggable-points.js
+    - plugins/export-csv.js
+    - plugins/grouped-categories.js
+    - plugins/motion.js
     - plugins/pattern-fill-v2.js
-    - plugins/text-symbols.js
-    - plugins/symbols-extra.js
+    - plugins/tooltip-delay.js
+    - custom/reset.js
+    - custom/symbols-extra.js
+    - custom/text-symbols.js
     stylesheet:
     - css/motion.css
   - name: fontawesome
@@ -42,3 +49,4 @@ dependencies:
     src: "htmlwidgets/lib/htmlwdgtgrid"
     stylesheet:
     - htmlwdgtgrid.css
+

@@ -23,7 +23,7 @@ validate_args <- function(name, lstargs) {
 #' @importFrom rlist list.merge
 .hc_opt <- function(hc, name, ...) {
   
-  assertthat::assert_that(.is_highchart(hc))
+  assertthat::assert_that(is.highchart(hc))
   
   validate_args(name, eval(substitute(alist(...))))
   
@@ -322,23 +322,29 @@ hc_legend <- function(hc, ...) {
 #' @examples 
 #' 
 #' 
-#' data(citytemp)
-#' 
-#' highchart() %>% 
-#'   hc_xAxis(categories = citytemp$month) %>% 
-#'   hc_add_series(name = "Tokyo", data = citytemp$tokyo) %>% 
-#'   hc_add_series(name = "London", data = citytemp$london) %>% 
-#'   hc_tooltip(crosshairs = TRUE, backgroundColor = "gray",
-#'              headerFormat = "This is a custom header<br>",
-#'              shared = TRUE, borderWidth = 5)
+#' highcharts_demo() %>%
+#'   hc_tooltip(crosshairs = TRUE, borderWidth = 5, sort = TRUE, table = TRUE) 
 #'              
 #' @param hc A \code{highchart} \code{htmlwidget} object. 
 #' @param ... Arguments are defined in \url{http://api.highcharts.com/highcharts#tooltip}. 
+#' @param sort Logical value to implement sort according \code{this.point}
+#'   \url{http://stackoverflow.com/a/16954666/829971}.
+#' @param table Logical value to implement table in tooltip: 
+#'   \url{http://stackoverflow.com/a/22327749/829971}.
 #'
 #' @export
-hc_tooltip <- function(hc, ...) {
+hc_tooltip <- function(hc, ..., sort = FALSE, table = FALSE) {
   
-  .hc_opt(hc, "tooltip", ...)
+  if (sort)
+    hc <- .hc_tooltip_sort(hc)
+  
+  if (table)
+    hc <- .hc_tooltip_table(hc)
+  
+  if (length(list(...))) 
+    hc <- .hc_opt(hc, "tooltip", ...)
+  
+  hc  
   
 }
 
@@ -467,68 +473,3 @@ hc_series <- function(hc, ...) {
   .hc_opt(hc, "series", ...)
   
 }
-
-#' Adding and removing series from highchart objects
-#'
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#chart}. 
-#'
-#' @examples
-#' 
-#' data("citytemp")
-#' 
-#' hc <- highchart() %>% 
-#'   hc_xAxis(categories = citytemp$month) %>% 
-#'   hc_add_series(name = "Tokyo", data = citytemp$tokyo) %>% 
-#'   hc_add_series(name = "New York", data = citytemp$new_york) 
-#' 
-#' hc 
-#' 
-#' hc %>% 
-#'   hc_add_series(name = "London", data = citytemp$london, type = "area") %>% 
-#'   hc_rm_series(name = "New York")
-#'
-#' @export
-hc_add_series <- function(hc, ...) {
-  
-  validate_args("add_series", eval(substitute(alist(...))))
-  
-  dots <- list(...)
-  
-  if (is.numeric(dots$data) & length(dots$data) == 1) {
-    dots$data <- list(dots$data)
-  }
-    
-  lst <- do.call(list, dots)
-  
-  hc$x$hc_opts$series <- append(hc$x$hc_opts$series, list(lst))
-  
-  hc
-  
-}
-
-#' Removing series to highchart objects
-#'
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param name The serie's name to delete.
-#' 
-#' @export
-hc_rm_series <- function(hc, name = NULL) {
-  
-  stopifnot(!is.null(name))
-  
-  positions <- hc$x$hc_opts$series %>%
-    map("name") %>%
-    unlist()
-  
-  position <- which(positions == name)
-  
-  hc$x$hc_opts$series[position] <- NULL
-  
-  hc
-  
-}
-
-#' @rdname hc_rm_series
-#' @export
-hc_rm_serie <- hc_rm_series

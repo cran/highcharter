@@ -1,7 +1,5 @@
 #' Dotabuff theme for highcharts
 #' 
-#' Dotabuff theme for highcharts
-#' 
 #' @param ... Named argument to modify the theme
 #' 
 #' @examples 
@@ -14,7 +12,7 @@ hc_theme_db <- function(...){
   
   theme <- 
     list(
-      colors = c("#FFFFFF", "#A9CF54", "#C23C2A", "#979797", "#FBB829"),
+      colors = c("#A9CF54", "#C23C2A", "#FFFFFF", "#979797", "#FBB829"),
       chart = list(  
         backgroundColor = "#242F39"
         ),
@@ -62,8 +60,8 @@ hc_theme_db <- function(...){
           ),
         lineColor = "#2E3740",
         tickColor = "#2E3740",
-        title = list(  
-          style = list(  
+        title = list(
+          style = list(
             color = "#FFFFFF"
             ),
           text = NULL

@@ -8,15 +8,7 @@
 #' 
 #' @examples 
 #' 
-#' hc <- highchart(debug = TRUE) %>% 
-#'   hc_add_series_scatter(mtcars$wt, mtcars$mpg, color = mtcars$cyl) %>% 
-#'   hc_chart(zoomType = "xy") %>% 
-#'   hc_title(text = "Motor Trend Car Road Tests") %>% 
-#'   hc_subtitle(text = "Motor Trend Car Road Tests") %>% 
-#'   hc_xAxis(title = list(text = "Weight")) %>% 
-#'   hc_yAxis(title = list(text = "Miles/gallon")) %>% 
-#'   hc_tooltip(headerFormat = "<b>{series.name} cylinders</b><br>",
-#'              pointFormat = "{point.x} (lb/1000), {point.y} (miles/gallon)")
+#' hc <- highcharts_demo()
 #' 
 #' hc
 #' 
@@ -75,7 +67,7 @@ hc_theme <- function(...){
 #' @export
 hc_add_theme <- function(hc, hc_thm){
   
-  assert_that(.is_highchart(hc), .is_hc_theme(hc_thm))
+  assert_that(is.highchart(hc), .is_hc_theme(hc_thm))
   
   hc$x$fonts <- unique(c(hc$x$fonts, .hc_get_fonts(hc_thm)))
   

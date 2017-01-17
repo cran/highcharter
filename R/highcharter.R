@@ -12,8 +12,6 @@
 #' @param width A numeric input in pixels.
 #' @param height  A numeric input in pixels.
 #' @param elementId	Use an explicit element ID for the widget.
-#' @param debug A boolean value if you want to print in the browser console the 
-#'    parameters given to \code{highchart}.
 #'      
 #' @importFrom htmlwidgets createWidget sizingPolicy
 #'
@@ -23,8 +21,7 @@ highchart <- function(hc_opts = list(),
                       type = "chart",
                       width = NULL,
                       height = NULL,
-                      elementId = NULL,
-                      debug = FALSE) {
+                      elementId = NULL) {
   
   assertthat::assert_that(type %in% c("chart", "stock", "map"))
   
@@ -44,9 +41,10 @@ highchart <- function(hc_opts = list(),
     conf_opts = opts,
     type = type,
     fonts = unfonts,
-    debug = debug
-    
+    debug = getOption("highcharter.debug")
   )
+  
+  attr(x, "TOJSON_ARGS") <- list(pretty = getOption("highcharter.debug"))
   
   # create widget
   htmlwidgets::createWidget(
@@ -63,6 +61,14 @@ highchart <- function(hc_opts = list(),
       browser.fill = TRUE
       )
   )
+}
+
+#' Reports whether x is a highchart object
+#' 
+#' @param x An object to test
+#' @export
+is.highchart <- function(x) {
+  inherits(x, "highchart") || inherits(x, "highchart2")
 }
 
 #' Widget output function for use in Shiny
@@ -145,4 +151,20 @@ highchart2 <- function(hc_opts = list(),
       browser.fill = TRUE
       )
   )
+}
+
+#' @rdname highchartOutput
+#' @export
+highchartOutput2 <- function(outputId, width = "100%", height = "400px"){
+  shinyWidgetOutput(outputId, "highchart2", width, height,
+                    package = "highcharter")
+}
+
+#' @rdname renderHighchart
+#' @export
+renderHighchart2 <- function(expr, env = parent.frame(), quoted = FALSE) {
+  if (!quoted) {
+    expr <- substitute(expr)
+  } # force quoted
+  shinyRenderWidget(expr, highchartOutput2, env, quoted = TRUE)
 }

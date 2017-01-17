@@ -2,28 +2,21 @@
 % Please edit documentation in R/theme-flat.R
 \name{hc_theme_flat}
 \alias{hc_theme_flat}
-\alias{hc_theme_flatdark}
-\title{Base16 Insipred theme}
+\title{Flat theme for highcharts}
 \usage{
 hc_theme_flat(...)
-
-hc_theme_flatdark(...)
 }
 \arguments{
 \item{...}{Named argument to modify the theme}
 }
 \description{
-Theme inspired by https://github.com/chriskempson/base16 and
+Base16 Insipred theme https://github.com/chriskempson/base16 and
 https://github.com/cttobin/ggthemr#flat
 }
 \examples{
 
 highcharts_demo() \%>\% 
   hc_add_theme(hc_theme_flat())
-
-
-highcharts_demo() \%>\% 
-  hc_add_theme(hc_theme_flatdark())
 
 }
 
