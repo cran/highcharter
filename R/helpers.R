@@ -1,16 +1,12 @@
 #' Convert an object to list with identical structure
 #'
-#' This functions are similiar to \code{rlist::list.parse} but this removes
+#' This functions are similar to \code{rlist::list.parse} but this removes
 #' names.
-#'
 #' @param df A data frame to parse to list
-#'
 #' @examples
 #'
 #' x <- data.frame(a=1:3, type=c('A','C','B'), stringsAsFactors = FALSE)
-#'
 #' list_parse(x)
-#'
 #' list_parse2(x)
 #'
 #' @importFrom purrr transpose
@@ -38,24 +34,6 @@ list_parse2 <- function(df) {
 
 }
 
-#' @rdname list_parse
-#' @export
-list.parse2 <- function(df) {
-
-  .Deprecated("list_parse2")
-
-  list_parse2(df)
-}
-
-#' @rdname list_parse
-#' @export
-list.parse3 <- function(df) {
-
-  .Deprecated("list_parse")
-
-  list_parse(df)
-}
-
 #' String to 'id' format
 #'
 #' Turn a string to \code{id} format used in treemaps.
@@ -66,7 +44,6 @@ list.parse3 <- function(df) {
 #'
 #' str_to_id(" A string _ with sd / sdg    Underscores \   ")
 #'
-#' @importFrom stringr str_to_lower str_replace_all
 #' @export
 str_to_id <- function(x) {
 
@@ -84,7 +61,7 @@ str_to_id <- function(x) {
 
 }
 
-#' Date to Timesstamps
+#' Date to timestamps
 #'
 #' Turn a date time vector to \code{timestamp} format
 #'
@@ -110,7 +87,7 @@ datetime_to_timestamp <- function(dt) {
 
 }
 
-#' Transform colors from hexadeximal format to rgba hc notation
+#' Transform colors from hexadecimal format to rgba hc notation
 #'
 #' @param x colors in hexadecimal format
 #' @param alpha alpha
@@ -118,7 +95,6 @@ datetime_to_timestamp <- function(dt) {
 #' @examples
 #'
 #' hex_to_rgba(x <- c("#440154", "#21908C", "#FDE725"))
-#'
 #'
 #' @importFrom grDevices col2rgb
 #' @importFrom tidyr unite_
@@ -188,102 +164,10 @@ highcharts_demo <- function() {
 
 }
 
-#' Helpers functions to get FontAwesome icons code
-#'
-#' Helpers functions to get FontAwesome icons code
-#'
-#' @param iconname The icon's name
-#'
-#' @examples
-#'
-#' fa_icon("car")
-#'
-#' @export
-fa_icon <- function(iconname = "circle") {
-
-  faicos <- readRDS(system.file("extdata/faicos.rds", package = "highcharter"))
-
-  stopifnot(iconname %in% faicos$name)
-
-  sprintf("<i class=\"fa fa-%s\"></i>", iconname)
-}
-
-#' @rdname fa_icon
-#'
-#' @examples
-#'
-#' fa_icon_mark("car")
-#'
-#' fa_icon_mark(iconname = c("car", "plane", "car"))
-#'
-#' @export
-fa_icon_mark <- function(iconname = "circle"){
-
-  faicos <- readRDS(system.file("extdata/faicos.rds", package = "highcharter"))
-
-  stopifnot(all(iconname %in% faicos$name))
-
-  idx <- purrr::map_int(iconname, function(icn) which(faicos$name %in% icn))
-
-  cod <- faicos$code[idx]
-
-  # this is for the plugin: need the text:code to parse
-  paste0("text:", cod)
-
-}
-
-#' Helper for make table in tooltips
-#'
-#' Helper to make table in tooltips for the \code{pointFormat}
-#' parameter in \code{hc_tooltip}
-#'
-#' @param x A string vector with description text
-#' @param y A string with accesors ex: \code{point.series.name},
-#'   \code{point.x}
-#' @param title A title tag with accessor or string
-#' @param img Img tag
-#' @param ... html attributes for the table element
-#'
-#' @examples
-#'
-#' x <- c("Income:", "Genre", "Runtime")
-#' y <- c("$ {point.y}", "{point.series.options.extra.genre}",
-#'        "{point.series.options.extra.runtime}")
-#'
-#' tooltip_table(x, y)
-#'
-#' @importFrom purrr map2
-#' @importFrom htmltools tags tagList
-#' @export
-tooltip_table <- function(x, y,
-                          title = NULL,
-                          img = NULL, ...) {
-
-  assertthat::assert_that(length(x) == length(y))
-
-  tbl <- map2(x, y, function(x, y){
-    tags$tr(
-      tags$th(x),
-      tags$td(y)
-    )
-  })
-
-  tbl <- tags$table(tbl, ...)
-
-  if (!is.null(title))
-    tbl <- tagList(title, tbl)
-
-  if (!is.null(img))
-    tbl <- tagList(tbl, img)
-
-  as.character(tbl)
-
-}
-
 #' Create vector of color from vector
 #'
 #' @param x A numeric, character or factor object.
-#' @param colors A character string of colors (ordered) to colorize \code{x}
+#' @param colors A character string of colors (ordered) to colorize `x`
 #' @examples
 #'
 #' colorize(runif(10))
@@ -366,8 +250,8 @@ color_classes <- function(breaks = NULL,
 #'
 #' This function is used in hchart.data.frame and hc_add_series_df
 #'
-#' @param data A \code{data.frame} object.
-#' @param type The type of chart. Possible values are line, scatter, point, column.
+#' @param data A `data.frame` object.
+#' @param type The type of chart. Possible values are line, scatter, point, columnn.
 #' @param ... Aesthetic mappings as \code{x y group color low high}.
 #'
 #' @examples
@@ -491,3 +375,4 @@ fix_1_length_data <- function(x) {
     x <- list(x)
   x
 }
+

@@ -1,12 +1,12 @@
 #' Adding and removing series from highchart objects
 #'
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
+#' @param hc A `highchart` `htmlwidget` object. 
 #' @param data An R object like numeric, list, ts, xts, etc.
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#chart}. 
+#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts/chart}. 
 #' @examples
 #' 
 #'  highchart() %>%
-#'    hc_add_series(data = abs(rnorm(5)), type = "column") %>% 
+#'    hc_add_series(data = abs(rnorm(5)), type = "columnn") %>% 
 #'    hc_add_series(data = purrr::map(0:4, function(x) list(x, x)), type = "scatter", color = "blue")
 #'
 #' @export
@@ -37,9 +37,9 @@ hc_add_series.default <- function(hc, ...) {
 
 
 #' `hc_add_series` for numeric objects
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
+#' @param hc A `highchart` `htmlwidget` object. 
 #' @param data A numeric object
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#chart}. 
+#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts/chart}. 
 #' @export
 hc_add_series.numeric <- function(hc, data, ...) {
   
@@ -54,9 +54,9 @@ hc_add_series.numeric <- function(hc, data, ...) {
 
 
 #' hc_add_series for time series objects
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param data A time series \code{ts} object.
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#chart}. 
+#' @param hc A `highchart` `htmlwidget` object. 
+#' @param data A time series `ts` object.
+#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts/chart}. 
 #' @importFrom zoo as.Date
 #' @importFrom stats time
 #' @export
@@ -79,9 +79,9 @@ hc_add_series.ts <- function(hc, data, ...) {
 
 
 #' hc_add_series for xts objects
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param data A \code{xts} object.
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#chart}. 
+#' @param hc A `highchart` `htmlwidget` object. 
+#' @param data A `xts` object.
+#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts/chart}. 
 #' @importFrom xts is.xts
 #' @importFrom quantmod is.OHLC
 #' @export
@@ -103,8 +103,7 @@ hc_add_series.xts <- function(hc, data, ...) {
 
 
 #' @rdname hc_add_series.xts
-#' @param type The type of wayto show the \code{xts} object. Can be 'candlestick' or 'ohlc'.
-#' @importFrom stringr str_extract
+#' @param type The way to show the `xts` object. Can be 'candlestick' or 'ohlc'.
 #' @export
 hc_add_series.ohlc <- function(hc, data, type = "candlestick", ...){
   
@@ -125,16 +124,17 @@ hc_add_series.ohlc <- function(hc, data, type = "candlestick", ...){
 
 
 #' hc_add_series for forecast objects
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param data A \code{forecast} object.
+#' @param hc A `highchart` `htmlwidget` object. 
+#' @param data A `forecast` object.
 #' @param addOriginal Logical value to add the original series or not.
-#' @param addLevels Logical value to show predicctions bands.
-#' @param fillOpacity The opacity of bands
+#' @param addLevels Logical value to show predictions bands.
+#' @param fillOpacity The opacity of bands.
+#' @param name The name of the series.
 #' @param ... Arguments defined in
 #'   \url{http://api.highcharts.com/highcharts#chart}. 
 #' @export
 hc_add_series.forecast <- function(hc, data, addOriginal = FALSE,
-                                   addLevels = TRUE, fillOpacity = 0.1, ...) {
+                                   addLevels = TRUE, fillOpacity = 0.1, name = NULL, ...) {
   
   if (getOption("highcharter.verbose"))
     message("hc_add_series.forecast")
@@ -146,23 +146,22 @@ hc_add_series.forecast <- function(hc, data, addOriginal = FALSE,
   # ... <- NULL
   
   if (addOriginal)
-    hc <- hc_add_series(hc, data$x, name = "Series", zIndex = 3, ...)
+    hc <- hc_add_series(hc, data$x, name = ifelse(is.null(name), method, name), zIndex = 3, ...)
   
   
-  hc <- hc_add_series(hc, data$mean, name = method,  zIndex = 2, id = rid, ...)
-  
+  hc <- hc_add_series(hc, data$mean, name = ifelse(is.null(name), method, name),  zIndex = 2, id = rid, ...)
   
   if (addLevels){
     
     tmf <- datetime_to_timestamp(zoo::as.Date(time(data$mean)))
-    nmf <- paste(method, "level", data$level)
+    nmf <- paste(ifelse(is.null(name), method, name), "level", data$level)
     
     for (m in seq(ncol(data$upper))){ 
       # m <- 1
       dfbands <- data_frame(
         t = tmf,
-        u = as.vector(data$upper[, m]),
-        l = as.vector(data$lower[, m])
+        l = as.vector(data$lower[, m]),
+        u = as.vector(data$upper[, m])
       )
       
       hc <- hc %>%
@@ -186,9 +185,9 @@ hc_add_series.forecast <- function(hc, data, addOriginal = FALSE,
 
 
 #' hc_add_series for density objects
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param data A \code{density} object.
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#chart}. 
+#' @param hc A `highchart` `htmlwidget` object. 
+#' @param data A `density` object.
+#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts/chart}. 
 #' @export
 hc_add_series.density <- function(hc, data, ...) {
   
@@ -202,9 +201,9 @@ hc_add_series.density <- function(hc, data, ...) {
 
 
 #' hc_add_series for character and factor objects
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
+#' @param hc A `highchart` `htmlwidget` object. 
 #' @param data A \code{character} or \code{factor} object.
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#chart}. 
+#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts/chart}. 
 #' @export
 hc_add_series.character <- function(hc, data, ...) {
   
@@ -227,10 +226,10 @@ hc_add_series.character <- function(hc, data, ...) {
 hc_add_series.factor <- hc_add_series.character
 
 #' hc_add_series for geo_json & geo_list objects
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
+#' @param hc A `highchart` `htmlwidget` object. 
 #' @param data A \code{geo_json} or \code{geo_list} object.
 #' @param type Type of series. Can be 'mapline', 'mapoint'.
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts#chart}. 
+#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts/chart}. 
 #' @export
 hc_add_series.geo_json <- function(hc, data, type = NULL, ...) {
   
@@ -256,9 +255,51 @@ hc_add_series.geo_list <- function(hc, data, type = NULL, ...) {
   
 }
 
+#' hc_add_series for lm and loess objects
+#' @param hc A `highchart` `htmlwidget` object. 
+#' @param data A \code{lm} or \code{loess} object.
+#' @param type The type of the series: line, spline.
+#' @param color A stringr color.
+#' @param fillOpacity fillOpacity to the confidence interval.
+#' @param ... Arguments defined in 
+#'   \url{http://api.highcharts.com/highcharts#chart}. 
+#' @importFrom broom augment
+#' @export
+hc_add_series.lm <- function(hc, data, type = "line", color = "#5F83EE", fillOpacity = 0.1, ...) {
+  
+  if (getOption("highcharter.verbose"))
+    message(sprintf("hc_add_series.%s", class(data)))
+  
+  data2 <- data %>% 
+    augment() %>% 
+    as.matrix.data.frame() %>% 
+    as.data.frame() %>% 
+    tbl_df()
+  data2 <- arrange_(data2, .dots = names(data2)[2])
+  data2 <- mutate_(data2, .dots = c("x" = names(data2)[2]))
+  data2 <- select_(data2, .dots = c(names(data2)[1]), "x", ".fitted", ".se.fit")
+  
+  rid <- random_id()
+  
+  hc %>% 
+    hc_add_series(data2, type = type, hcaes_("x", ".fitted"), 
+                  id = rid, color = color, ...) %>% 
+    hc_add_series(data2, type = "arearange",
+                  hcaes_("x",
+                         low = ".fitted - 2 * .se.fit",
+                         high = ".fitted + 2 * .se.fit"),
+                  color = hex_to_rgba(color, fillOpacity),
+                  linkedTo = rid, zIndex = -2, ...)
+  
+}
+
+#' @rdname hc_add_series.lm
+#' @export
+hc_add_series.loess <- hc_add_series.lm
+
 #' hc_add_series for data frames objects
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param data A \code{data.frame} object.
+#' @param hc A `highchart` `htmlwidget` object. 
+#' @param data A `data.frame` object.
 #' @param type The type of the series: line, bar, etc.
 #' @param mapping The mapping, same idea as \code{ggplot2}.
 #' @param ... Arguments defined in 
@@ -269,14 +310,18 @@ hc_add_series.data.frame <- function(hc, data, type = NULL, mapping = hcaes(),
   
   if (getOption("highcharter.verbose"))
     message("hc_add_series.data.frame")
-
+  
   if (length(mapping) == 0) {
+    
+    if(has_name(data, "series"))
+      data <- rename_(data, "seriess" = "series")
     
     return(hc_add_series(hc, data = list_parse(data), type = type, ...))
     
   }
   
   data <- mutate_mapping(data, mapping)
+  
   series <- data_to_series(data, mapping, type = type, ...)
 
   hc_add_series_list(hc, series)
@@ -288,46 +333,104 @@ hc_add_series.data.frame <- function(hc, data, type = NULL, mapping = hcaes(),
 #' @param x,y,... List of name value pairs giving aesthetics to map to
 #'   variables. The names for x and y aesthetics are typically omitted because
 #'   they are so common; all other aesthetics must be named.
+#' @importFrom rlang enexprs is_missing
 #' @examples 
 #' 
 #' hcaes(x = xval, color = colorvar, group = grvar)
 #' 
 #' @export
 hcaes <- function (x, y, ...) {
-  mapping <- structure(as.list(match.call()[-1]), class = "uneval")
-  mapping <- mapping[names(mapping) != ""]
+  #taken from https://github.com/tidyverse/ggplot2/commit/d69762269787ed0799ab4fb1f35638cc46b5b7e6
+  exprs <- rlang::enexprs(x = x, y = y, ...)
+  
+  is_missing <- vapply(exprs, rlang::is_missing, logical(1))
+  
+  mapping <- structure(exprs[!is_missing], class = "uneval")
+
   class(mapping) <- c("hcaes", class(mapping))
+  
   mapping
 }
 
-#' Modify data frame accoring to mapping
+#' Define aesthetic mappings using strings.
+#' Similar in spirit to \code{ggplot2::aes_string}
+#' @param x,y,... List of name value pairs giving aesthetics to map to
+#'   variables. The names for x and y aesthetics are typically omitted because
+#'   they are so common; all other aesthetics must be named.
+#' @examples
+#' hchart(mtcars, "point", hcaes_string("hp", "mpg", group = "cyl"))
+#' 
+#' hcaes_string(x = 'xval', color = 'colorvar', group = 'grvar')
+#' @export
+hcaes_string <- function (x, y, ...){
+  
+  mapping <- list(...)
+  
+  if (!missing(x))
+    mapping["x"] <- list(x)
+  
+  if (!missing(y))
+    mapping["y"] <- list(y)
+  
+  mapping <- lapply(mapping, function(x) {
+    if (is.character(x)) {
+      parse(text = x)[[1]]
+    }
+    else {
+      x
+    }
+  })
+  
+  mapping <- structure(mapping, class = "uneval")
+  
+  mapping <- mapping[names(mapping) != ""]
+  
+  class(mapping) <- c("hcaes", class(mapping))
+  
+  mapping
+}
+
+#' @rdname hcaes_string
+#' @export
+hcaes_ <- hcaes_string
+
+
+#' Modify data frame according to mapping
 #' @param data A data frame object.
 #' @param mapping A mapping from \code{hcaes} function.
+#' @param drop A logical argument to you drop variables or not. Default is 
+#' \code{FALSE}
+#' @importFrom rlang "!!!" "!!" ":=" parse_quosure syms
 #' @examples 
 #' 
-#' mutate_mapping(data = head(mtcars), mapping = hcaes(x = cyl, y = wt + cyl, group = gear))
+#' df <- head(mtcars)
+#' mutate_mapping(data = df, mapping = hcaes(x = cyl, y = wt + cyl, group = gear))
+#' mutate_mapping(data = df, mapping = hcaes(x = cyl, y = wt), drop = TRUE)
 #' 
 #' @export
-mutate_mapping <- function(data, mapping) {
+mutate_mapping <- function(data, mapping, drop = FALSE) {
   
-  stopifnot(is.data.frame(data), inherits(mapping, "hcaes"))
+  stopifnot(is.data.frame(data), inherits(mapping, "hcaes"), inherits(drop, "logical"))
   
-  # http://rmhogervorst.nl/cleancode/blog/2016/06/13/NSE_standard_evaluation_dplyr.html
+  # https://stackoverflow.com/questions/45359917/dplyr-0-7-equivalent-for-deprecated-mutate
+  # https://www.johnmackintosh.com/2018-02-19-theory-free-tidyeval/
+  
   tran <- as.character(mapping)
   newv <- names(mapping)
-   
-  setNames(tran, newv)
+  list_names <- setNames(tran, newv) %>% lapply(rlang::parse_quosure)
+  
+  data <- dplyr::mutate(data, !!! list_names)
+  # Reserverd  highcharts names (#241)
+  if(has_name(data, "series"))
+    #old <- "seriess"
+    #new <- "series"
+    data <- dplyr::rename(data, "seriess" = "series")
+  
+  if(drop) {
+    newv <- rlang::syms(newv)
+    data <- dplyr::select(data, !!! newv)
+  }
 
-  data <- dplyr::mutate_(data, .dots = setNames(tran, newv))
-  
-  # mutate_call <- mapping %>% 
-  #   as.character() %>% 
-  #   map(function(x) paste("~ ", x)) %>% 
-  #   map(as.formula) %>% 
-  #   map(lazyeval::interp)
-  # 
-  # mutate_(data, .dots = mutate_call)
-  
   data
   
 }
@@ -452,7 +555,7 @@ data_to_options <- function(data, type) {
     (type == "treemap" & "color" %in% names(data)) | (type == "heatmap")
   
   # series marker enabled
-  opts$series_marker_enabled <- !(type %in% c("line", "spline"))
+  # opts$series_marker_enabled <- !(type %in% c("line", "spline"))
   
   # heatmap
   if (type == "heatmap") {
@@ -471,7 +574,7 @@ data_to_options <- function(data, type) {
 
 #' Removing series to highchart objects
 #'
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
+#' @param hc A `highchart` `htmlwidget` object. 
 #' @param names The series's names to delete.
 #' 
 #' @export
@@ -486,6 +589,35 @@ hc_rm_series <- function(hc, names = NULL) {
   position <- which(positions %in% names)
   
   hc$x$hc_opts$series[position] <- NULL
+  
+  hc
+  
+}
+
+#' Shortcut for data series from a list of data series
+#' 
+#' @param hc A `highchart` `htmlwidget` object.
+#' @param x A `list` or a `data.frame` of series.
+#' 
+#' @examples 
+#' 
+#' ds <- lapply(seq(5), function(x){
+#'   list(data = cumsum(rnorm(100, 2, 5)), name = x)
+#' })
+#' 
+#' highchart() %>% 
+#'   hc_plotOptions(series = list(marker = list(enabled = FALSE))) %>% 
+#'   hc_add_series_list(ds)
+#'   
+#' @export
+hc_add_series_list <- function(hc, x) {
+  
+  assertthat::assert_that(is.highchart(hc), (is.list(x) | is.data.frame(x)))
+  
+  if (is.data.frame(x))
+    x <- list_parse(x)
+  
+  hc$x$hc_opts$series <- append(hc$x$hc_opts$series, x)
   
   hc
   

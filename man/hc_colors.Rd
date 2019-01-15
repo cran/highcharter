@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-hc.R
 \name{hc_colors}
 \alias{hc_colors}
-\title{Adding color options to highchart objects}
+\title{Setting color options to highchart objects}
 \usage{
 hc_colors(hc, colors)
 }
@@ -12,7 +12,7 @@ hc_colors(hc, colors)
 \item{colors}{A vector of colors.}
 }
 \description{
-An array containing the default colors for the chart's series. When all 
+An array containing the default colors for the chart's series. When all
 colors are used, new colors are pulled from the start again.
 }
 \examples{
@@ -27,4 +27,3 @@ highcharts_demo() \%>\%
 
 
 }
-

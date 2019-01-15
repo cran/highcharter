@@ -1,42 +1,42 @@
-#' Shorcut to make a bar chart
+#' Shortcut to make a bar chart
 #' @param x A character or factor vector.
-#' @param ... Aditional arguments for the data series (http://api.highcharts.com/highcharts#series).
+#' @param ... Additional arguments for the data series \url{http://api.highcharts.com/highcharts#series}.
 #' @export
 hcbar <- function(x, ...) {
   stopifnot(is.character(x) | is.factor(x))
   hchart(x, ...)
 }
 
-#' Shorcut to make a pie chart
+#' Shortcut to make a pie chart
 #' @param x A character o factor vector.
-#' @param ... Aditional arguments for the data series (http://api.highcharts.com/highcharts#series).
+#' @param ... Additional arguments for the data series \url{http://api.highcharts.com/highcharts#series}.
 #' @export
 hcpie <- function(x, ...) {
   stopifnot(is.character(x) | is.factor(x))
   hchart(x, type = "pie", ...)
 }
 
-#' Shorcut to make an histogram
+#' Shortcut to make an histogram
 #' @param x A numeric vector.
-#' @param ... Aditional arguments for the data series (http://api.highcharts.com/highcharts#series).
+#' @param ... Additional arguments for the data series \url{http://api.highcharts.com/highcharts#series}.
 #' @export
 hchist <- function(x, ...) {
   stopifnot(is.numeric(x))
   hchart(x, ...)
 }
 
-#' Shorcut to make time series or line charts
+#' Shortcut to make time series or line charts
 #' @param x A numeric vector or a time series object.
-#' @param ... Aditional arguments for the data series (http://api.highcharts.com/highcharts#series).
+#' @param ... Additional arguments for the data series \url{http://api.highcharts.com/highcharts#series}.
 #' @importFrom stats as.ts
 #' @export
 hcts <- function(x, ...) {
   hchart(as.ts(x), ...)
 }
 
-#' Shorcut to make density charts
+#' Shortcut to make density charts
 #' @param x A numeric vector or a density object.
-#' @param ... Aditional arguments for the data series (http://api.highcharts.com/highcharts#series).
+#' @param ... Additional arguments for the data series \url{http://api.highcharts.com/highcharts#series}.
 #' @importFrom stats density
 #' @export
 hcdensity <- function(x, ...) {
@@ -50,10 +50,10 @@ hcdensity <- function(x, ...) {
   
 }
 
-#' Shorcut to make spkarlines
+#' Shortcut to make spkarlines
 #' @param x A numeric vector.
 #' @param type Type sparkline: line, bar, etc.
-#' @param ... Aditional arguments for the data series (http://api.highcharts.com/highcharts#series).
+#' @param ... Additional arguments for the data series \url{http://api.highcharts.com/highcharts#series}.
 #' 
 #' @examples
 #' 
@@ -61,7 +61,7 @@ hcdensity <- function(x, ...) {
 #' x <- cumsum(rnorm(10))
 #' 
 #' hcspark(x) 
-#' hcspark(x, "column")
+#' hcspark(x, "columnn")
 #' hcspark(c(1, 4, 5), "pie")
 #' hcspark(x, type = "area")
 #'    
@@ -81,7 +81,7 @@ hcspark <- function(x = NULL, type = NULL, ...) {
 #' @param var A string vector same length of x.
 #' @param var2 A string vector same length of x.
 #' @param outliers A boolean value to show or not the outliers.
-#' @param ... Aditional arguments for the data series (http://api.highcharts.com/highcharts#series).
+#' @param ... Additional arguments for the data series \url{http://api.highcharts.com/highcharts#series}.
 #' @examples 
 #' hcboxplot(x = iris$Sepal.Length, var = iris$Species, color = "red")
 #' @importFrom dplyr rename_ data_frame_
@@ -114,6 +114,7 @@ hcboxplot <- function(x = NULL, var = NULL, var2 = NULL, outliers = TRUE, ...) {
   series_box <- df %>%
     group_by_("g1", "g2") %>%  
     do(data = get_box_values(.$x)) %>% 
+    ungroup() %>% 
     unnest() %>% 
     group_by_("g2") %>% 
     do(data = list_parse(rename_(select_(., "-g2"), "name" = "g1"))) %>% 
@@ -127,12 +128,15 @@ hcboxplot <- function(x = NULL, var = NULL, var2 = NULL, outliers = TRUE, ...) {
   series_out <- df %>% 
     group_by_("g1", "g2") %>%  
     do(data = get_outliers_values(.$x)) %>% 
-    unnest() %>% 
+    ungroup() %>% 
+    filter(map_lgl(data, ~ length(.x) != 0)) %>% 
+    # mutate_if(is.list, unlist) %>% 
+    # unnest() %>% 
     group_by_("g2") %>% 
     do(data = list_parse(select_(., "name" = "g1", "y" = "data"))) %>% 
     # rename(name = g2) %>% 
     mutate(type = "scatter") %>% 
-    mutate("linkedTo" = "as.character(g2)")
+    mutate_("linkedTo" = "as.character(g2)")
   
   if (length(list(...)) > 0)
     series_out <- add_arg_to_df(series_out, ...)
@@ -166,21 +170,19 @@ hcboxplot <- function(x = NULL, var = NULL, var2 = NULL, outliers = TRUE, ...) {
       hc_plotOptions(series = list(showInLegend = FALSE))
   }
   
-  
   if(outliers)
     hc <- hc_add_series_list(hc, list_parse(series_out))
   
   hc
 }
 
-
-#' Shorcut to make icon arrays charts
+#' Shortcut to make icon arrays charts
 #' @param labels A character vector
 #' @param counts A integer vector
 #' @param rows A integer to set 
 #' @param icons A character vector same length (o length 1) as labels
 #' @param size Font size
-#' @param ... Aditional arguments for the data series (http://api.highcharts.com/highcharts#series).
+#' @param ... Additional arguments for the data series \url{http://api.highcharts.com/highcharts#series}.
 #' @examples
 #' 
 #' hciconarray(c("nice", "good"), c(10, 20))
@@ -277,17 +279,22 @@ hciconarray <- function(labels, counts, rows = NULL, icons = NULL, size = 4,
         hc_theme_null()
         )
       )
+  
+  if(!is.null(icons)) {
+    hc <- hc %>% hc_add_dependency_fa()
+  }
+    
   hc
   
 }
 
-#' Shorcut for create treemaps
+#' Shortcut for create treemaps
 #'
-#' This function helps to create higcharts treemaps from \code{treemap} objects
-#' from the package \code{treemap}.
+#' This function helps to create highcharts treemaps from \code{treemap} objects
+#' from the package \code{treemap}. NOTE: This function is deprecated. Please use \code{hctreemap2} instead.
 #' 
 #' @param tm A \code{treemap} object from the treemap package.
-#' @param ... Aditional shared arguments for the data series
+#' @param ... Additional shared arguments for the data series
 #'   (\url{http://api.highcharts.com/highcharts#series}).
 #' 
 #' @examples 
@@ -318,6 +325,8 @@ hciconarray <- function(labels, counts, rows = NULL, icons = NULL, size = 4,
 #' 
 #' @export 
 hctreemap <- function(tm, ...) {
+  
+  .Deprecated("hctreemap2")
   
   assertthat::assert_that(is.list(tm))
   
@@ -364,3 +373,175 @@ hctreemap <- function(tm, ...) {
   hc_add_series(highchart(), data = ds, type = "treemap", ...)
   
 }
+
+#' Shortcut to create treemaps.
+#' 
+#' This function helps create highcharts treemaps from data frames.
+#'
+#' @param data data frame containing variables to organize each level of the treemap on
+#' @param group_vars vector of strings containing column names of variables to generate treemap levels from. the first listed column will specify the top level of the treemap. the unique values in each of these columns must have no intersection (including NAs).
+#' @param size_var string name of column containing numeric data to aggregate by
+#' @param color_var string name of column containing numeric data to color by. defaults to same column as \code{size_var}
+#' @param ... additional shared arguments for the data series
+#'   (\url{http://api.highcharts.com/highcharts#series}).
+#'
+#' @return highchart plot object
+#' @examples
+#' 
+#' \dontrun{
+#' 
+#' library(tidyverse)
+#' library(highcharter)
+#' library(RColorBrewer)
+#' 
+#' data_frame(
+#'   index1 = sample(LETTERS[1:5], 500, replace = T),
+#'   index2 = sample(LETTERS[6:10], 500, replace = T),
+#'   index3 = sample(LETTERS[11:15], 500, replace = T),
+#'   value = rpois(500, 5),
+#'   color_value = rpois(500, 5)
+#' ) %>%
+#'   hctreemap2(
+#'     group_vars = c("index1", "index2", "index3"),
+#'     size_var = "value",
+#'     color_var = "color_value",
+#'     layoutAlgorithm = "squarified",
+#'     levelIsConstant = FALSE,
+#'     levels = list(
+#'       list(level = 1, dataLabels = list(enabled = TRUE)),
+#'       list(level = 2, dataLabels = list(enabled = FALSE)),
+#'       list(level = 3, dataLabels = list(enabled = FALSE))
+#'     )
+#'   ) %>% 
+#'   hc_colorAxis(minColor = brewer.pal(7, "Greens")[1],
+#'                maxColor = brewer.pal(7, "Greens")[7]) %>% 
+#'   hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
+#'              Value: {point.value:,.0f}<br>
+#'              Color Value: {point.colorValue:,.0f}")
+#' }
+#' 
+#' @importFrom dplyr bind_rows filter group_by mutate_at pull select summarise
+#' @importFrom purrr map pmap_chr
+#' 
+#' @export 
+hctreemap2 <- function(data, group_vars, size_var, color_var = NULL, ...) {
+  
+  assertthat::assert_that(is.data.frame(data))
+  assertthat::assert_that(is.character(group_vars))
+  assertthat::assert_that(is.character(size_var))
+  if (!is.null(color_var)) assertthat::assert_that(is.character(color_var))
+  
+  group_syms <- rlang::syms(group_vars)
+  size_sym <- rlang::sym(size_var)
+  color_sym <- rlang::sym(ifelse(is.null(color_var), size_var, color_var))
+  
+  if (data %>%
+      select(!!!group_syms) %>%
+      map(unique) %>%
+      unlist() %>%
+      anyDuplicated()) stop("Treemap data uses same label at multiple levels.")
+  
+  data <- data %>% mutate_at(group_vars, as.character)
+  
+  name_cell <- function(..., depth) paste0(list(...), 1:depth, collapse = "")
+  
+  data_at_depth <- function(depth) {
+    data %>%
+      group_by(!!!group_syms[1:depth]) %>%
+      summarise(
+        value = sum(!!size_sym),
+        colorValue = sum(!!color_sym)
+      ) %>%
+      ungroup() %>%
+      mutate(
+        name = !!group_syms[[depth]],
+        level = depth
+      ) %>% 
+      mutate_at(group_vars, as.character()) %>% 
+      {
+        if (depth == 1) mutate(., id = paste0(name, 1))
+        else {
+          mutate(
+            .,
+            parent = pmap_chr(
+              list(!!!group_syms[1:depth - 1]),
+              name_cell,
+              depth = depth - 1),
+            id = paste0(parent, name, depth)
+          )
+        }
+      }
+  }
+  
+  treemap_df <- 1:length(group_vars) %>%
+    map(data_at_depth) %>%
+    bind_rows()
+  
+  data_list <- treemap_df %>%
+    highcharter::list_parse() %>%
+    purrr::map(~.[!is.na(.)])
+  
+  colorVals <- treemap_df %>%
+    filter(level == length(group_vars)) %>%
+    pull(colorValue)
+  
+  highchart() %>%
+    hc_add_series(data = data_list,
+                  type = "treemap",
+                  allowDrillToNode = TRUE, ...) %>%
+    hc_colorAxis(min = min(colorVals),
+                 max = max(colorVals),
+                 enabled = TRUE)
+}
+
+#' Shortcut for create parallel coordinates
+#' @param df A data frame object.
+#' @param ... Additional shared arguments for the data series
+#'   (\url{http://api.highcharts.com/highcharts#series}) for the
+#'   \code{hchar.data.frame} function.
+#' @examples 
+#' require(viridisLite)
+#' 
+#' n <- 15
+#' 
+#' hcparcords(head(mtcars, n), color = hex_to_rgba(magma(n), 0.5))
+#' 
+#' require(dplyr)
+#' data(iris)
+#' set.seed(123)
+#' 
+#' iris <- sample_n(iris, 60)
+#' 
+#' hcparcords(iris, color = colorize(iris$Species))
+#' @importFrom dplyr mutate_if
+#' @export
+hcparcords <- function(df, ...) {
+  
+  stopifnot(is.data.frame(df))
+  
+  # df <- mtcars
+  # df <- mpg
+  
+  rescale01 <- function(x) {
+    rng <- range(x, na.rm = TRUE)
+    (x - rng[1]) / (rng[2] - rng[1])
+  }
+  
+  df <- df[map_lgl(df, is.numeric)]
+  
+  # Add row identifier
+  df <- rownames_to_column(df, ".row")
+  
+  df <- mutate_if(df, is.numeric, rescale01)
+  
+  df <- tidyr::gather_(df, "var", "val", setdiff(names(df), ".row"))
+  
+  hchart(df, "line", hcaes_(x = "var", y = "val", group = ".row"), ...) %>% 
+    hc_plotOptions(series = list(showInLegend = FALSE)) %>% 
+    hc_yAxis(min = 0, max = 1) %>% 
+    hc_tooltip(sort = TRUE, table = TRUE, valueDecimals = 2) 
+  
+}
+
+
+

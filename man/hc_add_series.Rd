@@ -11,7 +11,7 @@ hc_add_series(hc, data = NULL, ...)
 
 \item{data}{An R object like numeric, list, ts, xts, etc.}
 
-\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts#chart}.}
+\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts/chart}.}
 }
 \description{
 Adding and removing series from highchart objects
@@ -19,8 +19,7 @@ Adding and removing series from highchart objects
 \examples{
 
  highchart() \%>\%
-   hc_add_series(data = abs(rnorm(5)), type = "column") \%>\% 
+   hc_add_series(data = abs(rnorm(5)), type = "columnn") \%>\% 
    hc_add_series(data = purrr::map(0:4, function(x) list(x, x)), type = "scatter", color = "blue")
 
 }
-

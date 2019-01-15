@@ -1,6 +1,6 @@
 #' Simple theme for highcharts
 #' 
-#' Desing inspired by \url{https://github.com/hrbrmstr/hrbrmisc/blob/master/R/themes.r}
+#' Design inspired by \url{https://github.com/hrbrmstr/hrbrmisc/blob/master/R/themes.r}
 #' and color by \url{https://www.materialui.co/flatuicolors}
 #' 
 #' @param ... Named argument to modify the theme
@@ -19,7 +19,8 @@ hc_theme_smpl <- function(...){
                  "#f1c40f", "#2c3e50", "#7f8c8d"),
       chart = list(
         style = list(
-          fontFamily = "Roboto"
+          fontFamily = "Roboto",
+          color = "#666666"
         )
       ),
       title = list(
@@ -56,20 +57,22 @@ hc_theme_smpl <- function(...){
       ),
       plotOptions = list(
         line = list(
-          marker = list(enabled = FALSE),
-          states = list(hover = list(lineWidthPlus = 1))
+          marker = list(enabled = FALSE)
         ),
         spline = list(
-          marker = list(enabled = FALSE),
-          states = list(hover = list(lineWidthPlus = 1))
+          marker = list(enabled = FALSE)
         ),
         area = list(
-          marker = list(enabled = FALSE),
-          states = list(hover = list(lineWidthPlus = 1))
+          marker = list(enabled = FALSE)
         ),
         areaspline = list(
-          marker = list(enabled = FALSE),
-          states = list(hover = list(lineWidthPlus = 1))
+          marker = list(enabled = FALSE)
+        ),
+        arearange = list(
+          marker = list(enabled = FALSE)
+        ),
+        bubble = list(
+          maxSize = "10%"
         )
       )
     )

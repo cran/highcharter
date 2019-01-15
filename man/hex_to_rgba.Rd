@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{hex_to_rgba}
 \alias{hex_to_rgba}
-\title{Transform colors from hexadeximal format to rgba hc notation}
+\title{Transform colors from hexadecimal format to rgba hc notation}
 \usage{
 hex_to_rgba(x, alpha = 1)
 }
@@ -12,12 +12,10 @@ hex_to_rgba(x, alpha = 1)
 \item{alpha}{alpha}
 }
 \description{
-Transform colors from hexadeximal format to rgba hc notation
+Transform colors from hexadecimal format to rgba hc notation
 }
 \examples{
 
 hex_to_rgba(x <- c("#440154", "#21908C", "#FDE725"))
 
-
 }
-

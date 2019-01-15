@@ -1,6 +1,6 @@
 #' Google theme for highcharts
 #' 
-#' Google theme for highcharts based on https://books.google.com/ngrams/
+#' Google theme for highcharts based on \url{https://books.google.com/ngrams/}.
 #' 
 #' @param ... Named argument to modify the theme
 #' 
@@ -17,7 +17,7 @@ hc_theme_google <- function(...){
     colors =  c("#0266C8", "#F90101", "#F2B50F", "#00933B"),
     chart = list(
       style = list(
-        fontFamily = "Arial, sans-serif",
+        fontFamily = "Roboto",
         color = "#444444"
       )
     ),

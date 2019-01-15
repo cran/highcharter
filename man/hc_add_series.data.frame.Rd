@@ -4,8 +4,8 @@
 \alias{hc_add_series.data.frame}
 \title{hc_add_series for data frames objects}
 \usage{
-\method{hc_add_series}{data.frame}(hc, data, type = NULL, mapping = hcaes(),
-  ...)
+\method{hc_add_series}{data.frame}(hc, data, type = NULL,
+  mapping = hcaes(), ...)
 }
 \arguments{
 \item{hc}{A \code{highchart} \code{htmlwidget} object.}
@@ -16,10 +16,9 @@
 
 \item{mapping}{The mapping, same idea as \code{ggplot2}.}
 
-\item{...}{Arguments defined in 
+\item{...}{Arguments defined in
 \url{http://api.highcharts.com/highcharts#chart}.}
 }
 \description{
 hc_add_series for data frames objects
 }
-

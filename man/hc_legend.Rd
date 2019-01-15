@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-hc.R
 \name{hc_legend}
 \alias{hc_legend}
-\title{Adding legend options to highchart objects}
+\title{Setting legend options to highchart objects}
 \usage{
 hc_legend(hc, ...)
 }
@@ -17,7 +17,6 @@ each item or point item in the chart.
 }
 \examples{
 
-
 data(citytemp)
 
 highchart() \%>\% 
@@ -28,4 +27,3 @@ highchart() \%>\%
             layout = "vertical", x = 0, y = 100) 
             
 }
-

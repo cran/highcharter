@@ -2,21 +2,20 @@
 % Please edit documentation in R/api-hc.R
 \name{hc_credits}
 \alias{hc_credits}
-\title{Adding credits options to highchart objects}
+\title{Setting credits options to highchart objects}
 \usage{
 hc_credits(hc, ...)
 }
 \arguments{
 \item{hc}{A \code{highchart} \code{htmlwidget} object.}
 
-\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts#credits}.}
+\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts/credits}.}
 }
 \description{
 \code{highcarter} by default don't put credits in the chart.
 You can add credits using these options.
 }
 \examples{
-
 
 data("citytemp")
 
@@ -27,4 +26,3 @@ highchart() \%>\%
              href = "http://www.htmlwidgets.org/")
              
 }
-

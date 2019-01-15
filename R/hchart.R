@@ -1,13 +1,13 @@
 #' Create a highchart object from a particular data type
 #' 
-#' \code{hchart} uses \code{highchart} to draw a particular plot for an 
+#' \code{hchart} uses `highchart` to draw a particular plot for an 
 #' object of a particular class in a single command. This defines the S3 
 #' generic that other classes and packages can extend.
 #' 
 #' Run \code{methods(hchart)} to see what objects are supported.
 #' 
 #' @param object  A R object.
-#' @param ... Aditional arguments for the data series 
+#' @param ... Additional arguments for the data series 
 #'    (\url{http://api.highcharts.com/highcharts#series}).
 #'    
 #' @export
@@ -28,7 +28,9 @@ hchart.data.frame <- function(object, type = NULL, mapping = hcaes(), ...){
   
   if (getOption("highcharter.verbose"))
     message("hchart.data.frame")
-  
+
+  object <- as.data.frame(object)
+    
   data <- mutate_mapping(object, mapping)
   
   series <- data_to_series(data, mapping, type = type, ...)
@@ -50,8 +52,7 @@ hchart.data.frame <- function(object, type = NULL, mapping = hcaes(), ...){
              categories = opts$yAxis_categories) %>% 
     hc_plotOptions(
       series = list(
-        showInLegend = opts$series_plotOptions_showInLegend,
-        marker = list(enabled = opts$series_marker_enabled)
+        showInLegend = opts$series_plotOptions_showInLegend
       ),
       scatter = list(marker = list(symbol = "circle"))
     )
@@ -350,11 +351,11 @@ hchart.matrix <- function(object, label = FALSE, showInLegend = FALSE, ...) {
   ismatrix <- is.null(colnames(object)) & is.null(rownames(object))
   pos <- ifelse(ismatrix, 0, 1)
   
-  xnm <- if (is.null(colnames(object))) 1:ncol(object) else colnames(object)
+  xnm <- if (is.null(colnames(object))) seq_len(ncol(object)) else colnames(object)
   xnm <- as.character(xnm)
   xid <- seq(length(xnm)) - pos
   
-  ynm <- if (is.null(rownames(object))) 1:nrow(object) else rownames(object)
+  ynm <- if (is.null(rownames(object))) seq_len(nrow(object)) else rownames(object)
   ynm <- as.character(ynm)
   yid <- seq(length(ynm)) - pos
   
@@ -428,7 +429,6 @@ hchart.dist <- function(object, ...) {
 }
 
 #' @importFrom igraph vertex_attr edge_attr get.edgelist layout_nicely
-#' @importFrom stringr str_to_title
 #' @importFrom stats setNames
 #' @export
 hchart.igraph <- function(object, ..., layout = layout_nicely, digits = 2) {
@@ -506,7 +506,7 @@ hchart.igraph <- function(object, ..., layout = layout_nicely, digits = 2) {
   vattrs <- setdiff(names(dfv), c("x", "y", "z", "color", "label", "name"))
   
   tltip_fmt <- tooltip_table(
-    str_to_title(str_replace(vattrs, "_", " ")),
+    str_to_title(str_replace_all(vattrs, "_", " ")),
     sprintf("{point.%s}", vattrs))
   
   hc <- highchart() %>% 
@@ -691,7 +691,7 @@ hchart.survfit <- function(object, ..., fun = NULL, markTimes = TRUE,
     hc <- hc %>%
       hc_add_series(
         data = c(first, ls), step = "left", name = name, zIndex = 1,
-        color = JS("Highcharts.getOptions().colors[", count, "]"),
+        color = JS(sprintf("Highcharts.getOptions().colors[%s]", count)),
         ...)
     
     if (ranges && !is.null(object$upper)) {
@@ -704,7 +704,7 @@ hchart.survfit <- function(object, ..., fun = NULL, markTimes = TRUE,
           data = range, step = "left", name = "Ranges",
           type = "arearange", zIndex = 0, linkedTo = ":previous",
           fillOpacity = rangesOpacity, lineWidth = 0,
-          color = JS("Highcharts.getOptions().colors[", count, "]"),
+          color = JS(sprintf("Highcharts.getOptions().colors[%s]", count)),
           ...)
     }
     count <- count + 1
@@ -723,8 +723,8 @@ hchart.survfit <- function(object, ..., fun = NULL, markTimes = TRUE,
 #' @importFrom tibble rownames_to_column
 #' @export
 
-hchart.density <- function(object, ...) { 
-  hc_add_series(highchart(), data = object, ...)
+hchart.density <- function(object, type = "area", ...) { 
+  hc_add_series(highchart(), data = object, type = type, ...)
 }
 
 #' @importFrom dplyr as_data_frame

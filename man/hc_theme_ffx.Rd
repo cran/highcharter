@@ -10,7 +10,7 @@ hc_theme_ffx(...)
 \item{...}{Named argument to modify the theme}
 }
 \description{
-Theme inspired by https://www.mozilla.org/en-US/styleguide/
+Theme inspired by \url{https://www.mozilla.org/en-US/styleguide/}.
 }
 \examples{
 
@@ -18,4 +18,3 @@ highcharts_demo() \%>\%
   hc_add_theme(hc_theme_ffx())
 
 }
-

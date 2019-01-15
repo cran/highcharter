@@ -1,11 +1,16 @@
-[![](highcharter-logo.png)](http://jkunst.com/highcharter/)
+[![](https://raw.githubusercontent.com/jbkunst/highcharter/master/highcharter-logo.png)](http://jkunst.com/highcharter/)
 
-[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/highcharter)](https://cran.r-project.org/package=highcharter)
-[![downloads](http://cranlogs.r-pkg.org/badges/highcharter)](http://www.r-pkg.org/pkg/highcharter)
+---
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/highcharter?color=brightgreen)](https://cran.r-project.org/package=highcharter)
+[![CRAN downloads](http://cranlogs.r-pkg.org/badges/highcharter?color=brightgreen)](http://www.r-pkg.org/pkg/highcharter)
 [![travis-status](https://api.travis-ci.org/jbkunst/highcharter.svg)](https://travis-ci.org/jbkunst/highcharter)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jbkunst/highcharter?branch=master&svg=true)](https://ci.appveyor.com/project/jbkunst/highcharter)
+[![GitHub closed issues](https://img.shields.io/github/issues-raw/jbkunst/highcharter.svg)](https://github.com/jbkunst/highcharter/issues)
+[![GitHub issues](https://img.shields.io/github/issues-closed-raw/jbkunst/highcharter.svg)](https://github.com/jbkunst/highcharter/issues)
 [![Github Stars](https://img.shields.io/github/stars/jbkunst/highcharter.svg?style=social&label=Github)](https://github.com/jbkunst/highcharter)
+
+---
 
 R wrapper for highcharts. `highcharter` bring all the highcharts capabilites
 so it is recommended know how highcharts API works to take a major advantage of 
@@ -32,15 +37,32 @@ fontawesome, url-pattern, annotations.
 ## Resources
 
 - Official package website: http://jkunst.com/highcharter/.
+- [Highcharts API and highcharter](https://dantonnoriega.github.io/ultinomics.org/post/2017-04-05-highcharter-explainer.html) by
+@dantonnoriega. 
 - Replicating Highcharts Demos: https://cran.rstudio.com/web/packages/highcharter/vignettes/replicating-highcharts-demos.html
 - CRAN site https://cran.r-project.org/web/packages/highcharter/.
-- Shiny demo code https://github.com/jbkunst/shiny-apps/tree/master/highcharter.
+- Some Shiny demos [here](http://104.140.247.162:3838/shiny-apps-highcharter/) and code [there](https://github.com/jbkunst/shiny-apps-highcharter).
+
+## Installation:
+
+
+CRAN version:
+```r
+install.packages("highcharter")
+```
+
+Development version:
+```r
+devtools::install_github("jbkunst/highcharter")
+
+source("https://install-github.me/jbkunst/highcharter")
+```
 
 ## Licence 
 
 Highcharter has a dependency on Highcharts, a commercial JavaScript charting library. Highcharts offers both a commercial license as well as a free non-commercial license. Please review the licensing options and terms before using this software, as the `highcharter` license neither provides nor implies a license for Highcharts.
 
-**Highcharts (http://highcharts.com) is a Highsoft product which is not free for commercial and Governmental use.**
+Highcharts (http://highcharts.com) is a Highsoft product which is not free for commercial and Governmental use.
 
 ## Discount for highcharter users
 

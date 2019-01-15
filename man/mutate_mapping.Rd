@@ -2,21 +2,25 @@
 % Please edit documentation in R/api-hc-hc_add_series.R
 \name{mutate_mapping}
 \alias{mutate_mapping}
-\title{Modify data frame accoring to mapping}
+\title{Modify data frame according to mapping}
 \usage{
-mutate_mapping(data, mapping)
+mutate_mapping(data, mapping, drop = FALSE)
 }
 \arguments{
 \item{data}{A data frame object.}
 
 \item{mapping}{A mapping from \code{hcaes} function.}
+
+\item{drop}{A logical argument to you drop variables or not. Default is
+\code{FALSE}}
 }
 \description{
-Modify data frame accoring to mapping
+Modify data frame according to mapping
 }
 \examples{
 
-mutate_mapping(data = head(mtcars), mapping = hcaes(x = cyl, y = wt + cyl, group = gear))
+df <- head(mtcars)
+mutate_mapping(data = df, mapping = hcaes(x = cyl, y = wt + cyl, group = gear))
+mutate_mapping(data = df, mapping = hcaes(x = cyl, y = wt), drop = TRUE)
 
 }
-

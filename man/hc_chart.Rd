@@ -2,14 +2,14 @@
 % Please edit documentation in R/api-hc.R
 \name{hc_chart}
 \alias{hc_chart}
-\title{Adding chart options to highchart objects}
+\title{Setting chart options to highchart objects}
 \usage{
 hc_chart(hc, ...)
 }
 \arguments{
 \item{hc}{A \code{highchart} \code{htmlwidget} object.}
 
-\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts#chart}.}
+\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts/chart}.}
 }
 \description{
 Options regarding the chart area and plot area as well as general chart options.
@@ -24,7 +24,7 @@ hc <- highchart() \%>\%
   hc_add_series(name = "London", data = citytemp$london)
 
 hc \%>\% 
-  hc_chart(type = "column",
+  hc_chart(type = "columnn",
            options3d = list(enabled = TRUE, beta = 15, alpha = 15))
 
 
@@ -40,4 +40,3 @@ hc \%>\%
              )))
 
 }
-

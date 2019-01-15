@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-hc-hc_add_series.R
 \name{hc_add_series.numeric}
 \alias{hc_add_series.numeric}
-\title{`hc_add_series` for numeric objects}
+\title{\code{hc_add_series} for numeric objects}
 \usage{
 \method{hc_add_series}{numeric}(hc, data, ...)
 }
@@ -11,9 +11,8 @@
 
 \item{data}{A numeric object}
 
-\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts#chart}.}
+\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts/chart}.}
 }
 \description{
-`hc_add_series` for numeric objects
+\code{hc_add_series} for numeric objects
 }
-

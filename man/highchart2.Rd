@@ -2,13 +2,17 @@
 % Please edit documentation in R/highcharter.R
 \name{highchart2}
 \alias{highchart2}
+\alias{highchartzero}
 \title{Create a Highcharts chart widget}
 \usage{
-highchart2(hc_opts = list(), theme = NULL, width = NULL, height = NULL,
-  elementId = NULL, debug = FALSE)
+highchart2(hc_opts = list(), theme = NULL, width = NULL,
+  height = NULL, elementId = NULL, debug = FALSE)
+
+highchartzero(hc_opts = list(), theme = NULL, width = NULL,
+  height = NULL, elementId = NULL)
 }
 \arguments{
-\item{hc_opts}{A \code{list} object containing options defined as 
+\item{hc_opts}{A \code{list} object containing options defined as
 \url{http://api.highcharts.com/highcharts}.}
 
 \item{theme}{A \code{hc_theme} class object}
@@ -19,7 +23,7 @@ highchart2(hc_opts = list(), theme = NULL, width = NULL, height = NULL,
 
 \item{elementId}{Use an explicit element ID for the widget.}
 
-\item{debug}{A boolean value if you want to print in the browser console the 
+\item{debug}{A boolean value if you want to print in the browser console the
 parameters given to \code{highchart}.}
 }
 \description{
@@ -30,4 +34,3 @@ This function creates a Highchart chart using \pkg{htmlwidgets}. The
 widget can be rendered on HTML pages generated from R Markdown, Shiny, or
 other applications.
 }
-

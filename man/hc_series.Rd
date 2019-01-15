@@ -2,17 +2,17 @@
 % Please edit documentation in R/api-hc.R
 \name{hc_series}
 \alias{hc_series}
-\title{Series options from highchart objects}
+\title{Setting series/data options from highchart objects}
 \usage{
 hc_series(hc, ...)
 }
 \arguments{
 \item{hc}{A \code{highchart} \code{htmlwidget} object.}
 
-\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts#series}.}
+\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts/series}.}
 }
 \description{
-Series options from highchart objects
+Setting series/data options from highchart objects
 }
 \examples{
 
@@ -29,4 +29,3 @@ highchart() \%>\%
   )
 
 }
-

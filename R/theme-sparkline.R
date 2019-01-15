@@ -50,8 +50,11 @@ hc_theme_sparkline <- function(...) {
       shared = TRUE,
       padding = 0,
       positioner = JS(
-        "function (w, h, point) { return { x: point.plotX - w / 2,
-        y: point.plotY - h };}")
+        "function (w, h, point) { return {
+            x: point.plotX - w / 2,
+            y: point.plotY - h
+          };
+        }")
       ),
     plotOptions = list(
       series = list(

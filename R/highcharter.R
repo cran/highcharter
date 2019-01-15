@@ -4,9 +4,9 @@
 #' widget can be rendered on HTML pages generated from R Markdown, Shiny, or
 #' other applications.
 #'
-#' @param hc_opts A \code{list} object containing options defined as 
+#' @param hc_opts A `list` object containing options defined as 
 #'    \url{http://api.highcharts.com/highcharts}.
-#' @param theme A \code{hc_theme} class object
+#' @param theme A \code{hc_theme} class object-
 #' @param type A character value to set if use Highchart, Highstock or
 #'   Highmap. Options are \code{"chart"}, \code{"stock"} and \code{"map"}.
 #' @param width A numeric input in pixels.
@@ -57,8 +57,8 @@ highchart <- function(hc_opts = list(),
     sizingPolicy = htmlwidgets::sizingPolicy(
       defaultWidth = "100%",
       knitr.figure = FALSE,
-      knitr.defaultWidth = "100%",
-      browser.fill = TRUE
+      browser.fill = TRUE,
+      padding = 0
       )
   )
 }
@@ -68,7 +68,7 @@ highchart <- function(hc_opts = list(),
 #' @param x An object to test
 #' @export
 is.highchart <- function(x) {
-  inherits(x, "highchart") || inherits(x, "highchart2")
+  inherits(x, "highchart") || inherits(x, "highchart2") || inherits(x, "highchartzero")
 }
 
 #' Widget output function for use in Shiny
@@ -108,14 +108,14 @@ renderHighchart <- function(expr, env = parent.frame(), quoted = FALSE) {
 #' widget can be rendered on HTML pages generated from R Markdown, Shiny, or
 #' other applications.
 #'
-#' @param hc_opts A \code{list} object containing options defined as 
+#' @param hc_opts A `list` object containing options defined as 
 #'    \url{http://api.highcharts.com/highcharts}.
 #' @param theme A \code{hc_theme} class object
 #' @param width A numeric input in pixels.
 #' @param height  A numeric input in pixels.
 #' @param elementId	Use an explicit element ID for the widget.
 #' @param debug A boolean value if you want to print in the browser console the 
-#'    parameters given to \code{highchart}.
+#'    parameters given to `highchart`.
 #'
 #' @export
 highchart2 <- function(hc_opts = list(),
@@ -168,3 +168,35 @@ renderHighchart2 <- function(expr, env = parent.frame(), quoted = FALSE) {
   } # force quoted
   shinyRenderWidget(expr, highchartOutput2, env, quoted = TRUE)
 }
+
+#' @rdname highchart2 
+#' @export
+highchartzero <- function(hc_opts = list(),
+                          theme = NULL,
+                          width = NULL,
+                          height = NULL,
+                          elementId = NULL) {
+  
+  # unfonts <- unique(c(.hc_get_fonts(hc_opts), .hc_get_fonts(theme))) 
+  # forward options using x
+  x <- list(
+    hc_opts = hc_opts
+  )
+  
+  # create widget
+  htmlwidgets::createWidget(
+    name = "highchartzero",
+    x,
+    width = width,
+    height = height,
+    package = "highcharter",
+    elementId = elementId,
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      defaultWidth = "100%",
+      knitr.figure = FALSE,
+      knitr.defaultWidth = "100%",
+      browser.fill = TRUE
+    )
+  )
+}
+

@@ -1,6 +1,6 @@
 #' Tufte theme for highcharts
 #' 
-#' Desing inspired by Edward Tufte style.
+#' Design inspired by Edward Tufte style.
 #' 
 #' @param ... Named argument to modify the theme
 #' 
@@ -18,7 +18,7 @@
 #' 
 #' values <- 1 + abs(rnorm(12))
 #' highchart() %>%
-#'   hc_chart(type = "column") %>%
+#'   hc_chart(type = "columnn") %>%
 #'   hc_add_series(data = values) %>%
 #'   hc_xAxis(categories = month.abb) %>%
 #'   hc_add_theme(hc_theme_tufte2())
@@ -48,9 +48,6 @@ hc_theme_tufte <- function(...){
         # extra to yAxis
         tickWidth = 1,
         gridLineColor = "transparent"
-      ),
-      legend = list(
-        enabled = FALSE
       )
     )
 

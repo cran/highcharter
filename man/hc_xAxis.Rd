@@ -4,18 +4,21 @@
 \alias{hc_xAxis}
 \alias{hc_yAxis}
 \alias{hc_yAxis_multiples}
-\title{Adding axis options to highchart objects}
+\alias{hc_zAxis}
+\title{Setting axis options to highchart objects}
 \usage{
 hc_xAxis(hc, ...)
 
 hc_yAxis(hc, ...)
 
 hc_yAxis_multiples(hc, ...)
+
+hc_zAxis(hc, ...)
 }
 \arguments{
 \item{hc}{A \code{highchart} \code{htmlwidget} object.}
 
-\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts#xAxis}.}
+\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts/xAxis}.}
 }
 \description{
 Change axis labels or style. Add lines or band to charts.
@@ -53,4 +56,3 @@ highchart() \%>\%
    hc_add_series(data = rexp(10), type = "spline", yAxis = 1)
             
 }
-

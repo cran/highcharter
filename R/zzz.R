@@ -79,17 +79,18 @@
         ),
       plotOptions = list(
         series = list(
+          # start disabled series-label.js module https://api.highcharts.com/highcharts/plotOptions.series.label
+          label = list(enabled = FALSE),
           turboThreshold = 0
           ),
-        treemap = list(layoutAlgorithm = "squarified"),
-        bubble = list(minSize = 5, maxSize = 25)
-        ),
-      annotationsOptions = list(
-        enabledButtons = FALSE
-        ),
-      tooltip = list(
-        delayForDisplay = 10
+        treemap = list(layoutAlgorithm = "squarified")
         )
+      # accessibility = list(
+      #   enabled = TRUE,
+      #   keyboardNavigation = list(
+      #     enabled = TRUE
+      #     )
+      #   )
       )
     )
   

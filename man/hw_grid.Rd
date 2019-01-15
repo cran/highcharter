@@ -9,7 +9,7 @@ hw_grid(..., ncol = NULL, rowheight = NULL)
 }
 \arguments{
 \item{...}{either individual \code{highchart} objects or a mixture of
-    individual \code{highchart} objects
+individual \code{highchart} objects
 and \code{list}s of \code{highchart} objects.}
 
 \item{ncol}{how many columns in the grid}
@@ -20,4 +20,3 @@ and \code{list}s of \code{highchart} objects.}
 Lays out highchart widgets into a "grid", similar to
 \code{grid.arrange} from \code{gridExtra}
 }
-

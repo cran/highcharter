@@ -2,19 +2,19 @@
 % Please edit documentation in R/hchart-shorcuts.R
 \name{hctreemap}
 \alias{hctreemap}
-\title{Shorcut for create treemaps}
+\title{Shortcut for create treemaps}
 \usage{
 hctreemap(tm, ...)
 }
 \arguments{
 \item{tm}{A \code{treemap} object from the treemap package.}
 
-\item{...}{Aditional shared arguments for the data series
+\item{...}{Additional shared arguments for the data series
 (\url{http://api.highcharts.com/highcharts#series}).}
 }
 \description{
-This function helps to create higcharts treemaps from \code{treemap} objects
-from the package \code{treemap}.
+This function helps to create highcharts treemaps from \code{treemap} objects
+from the package \code{treemap}. NOTE: This function is deprecated. Please use \code{hctreemap2} instead.
 }
 \examples{
  
@@ -40,4 +40,3 @@ hctreemap(tm, allowDrillToNode = TRUE, layoutAlgorithm = "squarified") \%>\%
 }
 
 }
-

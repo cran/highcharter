@@ -1,12 +1,12 @@
 #' Add a map series
 #' 
-#' @param hc A \code{highchart} \code{htmlwidget} object. 
-#' @param map A \code{list} object loaded from a geojson file.
-#' @param df A \code{data.frame} object with data to chart. Code region and value are
+#' @param hc A `highchart` `htmlwidget` object. 
+#' @param map A `list` object loaded from a geojson file.
+#' @param df A `data.frame` object with data to chart. Code region and value are
 #'   required.
-#' @param value A string value with the name of the column to chart.
+#' @param value A string value with the name of the columnn to chart.
 #' @param joinBy What property to join the  \code{map} and \code{df}
-#' @param ... Aditional shared arguments for the data series
+#' @param ... Additional shared arguments for the data series
 #'   (\url{http://api.highcharts.com/highcharts#series}).
 #'   
 #' @examples 
@@ -68,36 +68,40 @@ hc_add_series_map <- function(hc, map, df, value, joinBy, ...) {
   
 }
 
-#' Shorcut for create map
-#' Shorcut for create map from \url{https://code.highcharts.com/mapdata/}
+#' Shortcut for create map from \url{https://code.highcharts.com/mapdata/}
 #' collection.
-#' @param map String indicating what map to chart.
+#' @param map String indicating what map to chart, a list from 
+#'   \url{https://code.highcharts.com/mapdata/}. See examples.
 #' @param download_map_data A logical value whether to download
-#'   (add as a depedeny) the map. Default \code{FALSE}.
+#'   (add as a dependency) the map. Default \code{TRUE} via
+#'   \code{getOption("highcharter.download_map_data")}.
 #' @param data Optional data to make a choropleth, in case of use
 #'   the joinBy and value are needed.
-#' @param value A string value with the name of the column to chart.
-#' @param joinBy What property to join the  \code{map} and \code{df}.
-
-#'   the map.
-#' @param ... Aditional shared arguments for the data series
+#' @param value A string value with the name of the columnn to chart.
+#' @param joinBy What property to join the \code{map} and \code{df}.
+#' @param ... Additional shared arguments for the data series
 #'   (\url{http://api.highcharts.com/highcharts#series}).
 #'   
 #' @examples
-#' require(dplyr) 
-#' hcmap(nullColor = "#DADADA")
-#' hcmap(nullColor = "#DADADA", download_map_data = TRUE)
 #' 
+#' \dontrun{
+#' 
+#' hcmap(nullColor = "#DADADA")
+#' hcmap(nullColor = "#DADADA", download_map_data = FALSE)
+#' 
+#' require(dplyr) 
 #' data("USArrests", package = "datasets")
 #' USArrests <- mutate(USArrests, "woe-name" = rownames(USArrests))
 #' 
 #' hcmap(map = "countries/us/us-all", data = USArrests,
 #'       joinBy = "woe-name", value = "UrbanPop", name = "Urban Population")
 #'       
+#' # download_map_data = FALSE        
 #' hcmap(map = "countries/us/us-all", data = USArrests,
 #'       joinBy = "woe-name", value = "UrbanPop", name = "Urban Population",
-#'       download_map_data = TRUE) 
+#'       download_map_data = FALSE) 
 #'   
+#' }
 #' @importFrom htmltools htmlDependency
 #' @export
 hcmap <- function(map = "custom/world",
@@ -150,14 +154,17 @@ hcmap <- function(map = "custom/world",
   
 }
 
-#' Auxilar function to download the map data form a url
+#' Helper function to download the map data form a url
+#' 
 #' The urls are listed in \url{https://code.highcharts.com/mapdata/}.
 #' @param url The map's url.
 #' @param showinfo Show the properties of the downloaded map to know how
 #'   are the keys to add data in \code{hcmap}.
 #' @examples
+#' \dontrun{
 #' mpdta <- download_map_data("https://code.highcharts.com/mapdata/countries/us/us-ca-all.js")
 #' str(mpdta, 1)
+#' }
 #' @seealso \code{\link{hcmap}}
 #' @importFrom dplyr glimpse
 #' @importFrom utils download.file
@@ -169,7 +176,7 @@ download_map_data <- function(url = "custom/world.js", showinfo = FALSE) {
   
   tmpfile <- tempfile(fileext = ".js")
   download.file(url, tmpfile)
-  mapdata <- readLines(tmpfile, warn = FALSE)
+  mapdata <- readLines(tmpfile, warn = FALSE, encoding = "UTF-8")
   mapdata[1] <- gsub(".* = ", "", mapdata[1])
   mapdata <- paste(mapdata, collapse = "\n")
   mapdata <- jsonlite::fromJSON(mapdata, simplifyVector = FALSE)
@@ -182,7 +189,7 @@ download_map_data <- function(url = "custom/world.js", showinfo = FALSE) {
   
 }
 
-#' Auxilar function to get the data inside the map data
+#' Helper function to get the data inside the map data
 #' The urls are listed in \url{https://code.highcharts.com/mapdata/}.
 #' @param mapdata A list obtained from \code{\link{download_map_data}}.
 #' @examples
@@ -198,7 +205,6 @@ get_data_from_map <- function(mapdata) {
       x[!map_lgl(x, is.null)]
       })
 }
-
 
 fix_map_name <- function(x = "custom/world") {
   x <- str_replace(x, "\\.js$", "")

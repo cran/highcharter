@@ -14,9 +14,8 @@
 
 \item{data}{A \code{character} or \code{factor} object.}
 
-\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts#chart}.}
+\item{...}{Arguments defined in \url{http://api.highcharts.com/highcharts/chart}.}
 }
 \description{
 hc_add_series for character and factor objects
 }
-
