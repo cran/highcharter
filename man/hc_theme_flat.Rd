@@ -7,15 +7,15 @@
 hc_theme_flat(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-Base16 inspired theme \url{https://github.com/chriskempson/base16} and
+Flat and flatdark theme is inspired by
+\url{https://github.com/chriskempson/base16} and
 \url{https://github.com/cttobin/ggthemr#flat}
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_flat())
-
 }

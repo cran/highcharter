@@ -4,9 +4,16 @@
 \alias{hchart.survfit}
 \title{Plot survival curves using Highcharts}
 \usage{
-\method{hchart}{survfit}(object, ..., fun = NULL, markTimes = TRUE,
-  symbol = "plus", markerColor = "black", ranges = FALSE,
-  rangesOpacity = 0.3)
+\method{hchart}{survfit}(
+  object,
+  ...,
+  fun = NULL,
+  markTimes = TRUE,
+  symbol = "plus",
+  markerColor = "black",
+  ranges = FALSE,
+  rangesOpacity = 0.3
+)
 }
 \arguments{
 \item{object}{A survfit object as returned from the \code{survfit} function}
@@ -40,16 +47,15 @@ Plot survival curves using Highcharts
 
 # Plot Kaplan-Meier curves
 require("survival")
-leukemia.surv <- survfit(Surv(time, status) ~ x, data = aml) 
+leukemia.surv <- survfit(Surv(time, status) ~ x, data = aml)
 hchart(leukemia.surv)
 
 # Plot the cumulative hazard function
-lsurv2 <- survfit(Surv(time, status) ~ x, aml, type='fleming') 
-hchart(lsurv2, fun="cumhaz")
+lsurv2 <- survfit(Surv(time, status) ~ x, aml, type = "fleming")
+hchart(lsurv2, fun = "cumhaz")
 
 # Plot the fit of a Cox proportional hazards regression model
 fit <- coxph(Surv(futime, fustat) ~ age, data = ovarian)
-ovarian.surv <- survfit(fit, newdata=data.frame(age=60))
+ovarian.surv <- survfit(fit, newdata = data.frame(age = 60))
 hchart(ovarian.surv, ranges = TRUE)
-
 }

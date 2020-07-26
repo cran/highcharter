@@ -7,14 +7,13 @@
 hc_theme_google(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-Google theme for highcharts based on \url{https://books.google.com/ngrams/}.
+Google theme for highcharts is based on \url{https://books.google.com/ngrams/}.
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_google())
-
 }

@@ -7,14 +7,15 @@
 hc_theme_sparkline(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-Based on \url{http://www.highcharts.com/demo/sparkline}.
+Sparkline theme is based on \url{http://www.highcharts.com/demo/sparkline}
+and this post  \url{http://jkunst.com/blog/posts/2020-06-26-valuebox-and-sparklines/}.
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_sparkline())
   
 }

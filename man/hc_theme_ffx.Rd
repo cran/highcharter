@@ -7,14 +7,13 @@
 hc_theme_ffx(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-Theme inspired by \url{https://www.mozilla.org/en-US/styleguide/}.
+Firefox theme was inspired by \url{https://www.mozilla.org/en-US/styleguide/}.
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_ffx())
-
 }

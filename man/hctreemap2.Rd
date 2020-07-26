@@ -32,7 +32,7 @@ library(tidyverse)
 library(highcharter)
 library(RColorBrewer)
 
-data_frame(
+tibble(
   index1 = sample(LETTERS[1:5], 500, replace = T),
   index2 = sample(LETTERS[6:10], 500, replace = T),
   index3 = sample(LETTERS[11:15], 500, replace = T),
@@ -50,9 +50,11 @@ data_frame(
       list(level = 2, dataLabels = list(enabled = FALSE)),
       list(level = 3, dataLabels = list(enabled = FALSE))
     )
-  ) \%>\% 
-  hc_colorAxis(minColor = brewer.pal(7, "Greens")[1],
-               maxColor = brewer.pal(7, "Greens")[7]) \%>\% 
+  ) \%>\%
+  hc_colorAxis(
+    minColor = brewer.pal(7, "Greens")[1],
+    maxColor = brewer.pal(7, "Greens")[7]
+  ) \%>\%
   hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
              Value: {point.value:,.0f}<br>
              Color Value: {point.colorValue:,.0f}")

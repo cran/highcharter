@@ -1,32 +1,31 @@
 #' Superheroes theme for highcharts
+#'
+#' The superheroes theme is inspired by \url{https://public.tableau.com/profile/ryansmith#!/vizhome/HeroesofNewYork/SuperheroesinNewYork}
 #' 
-#' Inspired by \url{https://public.tableau.com/profile/ryansmith#!/vizhome/HeroesofNewYork/SuperheroesinNewYork} 
+#' @param ... A named parameters to modify the theme.
 #' 
-#' @param ... Named argument to modify the theme
-#' 
-#' @examples 
-#' 
-#' highcharts_demo() %>% 
+#' @examples
+#'
+#' highcharts_demo() %>%
 #'   hc_add_theme(hc_theme_superheroes())
-#' 
+#'   
 #' @export
-hc_theme_superheroes <- function(...){
-  
+hc_theme_superheroes <- function(...) {
   theme <- hc_theme_flat(
     chart = list(
       backgroundColor = "#0B486B",
       style = list(
         color = "white",
         fontFamily = "Oswald",
-        fontWeight = "normal" 
+        fontWeight = "normal"
       )
     ),
     xAxis = list(
       gridLineColor = "#46627f",
       tickColor = "#46627f",
       lineColor = "#46627f",
-      title = list(  
-        style = list(  
+      title = list(
+        style = list(
           color = "#FFFFFF"
         )
       )
@@ -35,7 +34,7 @@ hc_theme_superheroes <- function(...){
       gridLineColor = "#46627f",
       tickColor = "#46627f",
       title = list(
-        style = list(  
+        style = list(
           color = "#FFFFFF"
         )
       )
@@ -57,22 +56,21 @@ hc_theme_superheroes <- function(...){
         color = "white",
         fontWeight = "normal"
       ),
-      itemHoverStyle = list(  
+      itemHoverStyle = list(
         color = "#C0C0C0"
       ),
-      itemHiddenStyle = list(  
+      itemHiddenStyle = list(
         color = "#444444"
       )
     )
   )
-  
+
   if (length(list(...)) > 0) {
     theme <- hc_theme_merge(
       theme,
       hc_theme(...)
     )
-  } 
-  
+  }
+
   theme
-  
 }

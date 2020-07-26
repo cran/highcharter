@@ -5,9 +5,14 @@
 \title{Shortcut for create map from \url{https://code.highcharts.com/mapdata/}
 collection.}
 \usage{
-hcmap(map = "custom/world",
+hcmap(
+  map = "custom/world",
   download_map_data = getOption("highcharter.download_map_data"),
-  data = NULL, value = NULL, joinBy = NULL, ...)
+  data = NULL,
+  value = NULL,
+  joinBy = NULL,
+  ...
+)
 }
 \arguments{
 \item{map}{String indicating what map to chart, a list from
@@ -20,7 +25,7 @@ hcmap(map = "custom/world",
 \item{data}{Optional data to make a choropleth, in case of use
 the joinBy and value are needed.}
 
-\item{value}{A string value with the name of the columnn to chart.}
+\item{value}{A string value with the name of the variable to chart.}
 
 \item{joinBy}{What property to join the \code{map} and \code{df}.}
 
@@ -33,22 +38,23 @@ collection.
 }
 \examples{
 
-\dontrun{
-
 hcmap(nullColor = "#DADADA")
 hcmap(nullColor = "#DADADA", download_map_data = FALSE)
 
-require(dplyr) 
+require(dplyr)
 data("USArrests", package = "datasets")
 USArrests <- mutate(USArrests, "woe-name" = rownames(USArrests))
 
-hcmap(map = "countries/us/us-all", data = USArrests,
-      joinBy = "woe-name", value = "UrbanPop", name = "Urban Population")
-      
-# download_map_data = FALSE        
-hcmap(map = "countries/us/us-all", data = USArrests,
-      joinBy = "woe-name", value = "UrbanPop", name = "Urban Population",
-      download_map_data = FALSE) 
-  
-}
+hcmap(
+  map = "countries/us/us-all", data = USArrests,
+  joinBy = "woe-name", value = "UrbanPop", name = "Urban Population"
+)
+
+# download_map_data = FALSE
+hcmap(
+  map = "countries/us/us-all", data = USArrests,
+  joinBy = "woe-name", value = "UrbanPop", name = "Urban Population",
+  download_map_data = FALSE
+)
+
 }

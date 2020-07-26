@@ -1,6 +1,6 @@
 dependencies:
   - name: jquery
-    version: 1.11.1
+    version: 3.5.0
     src: "htmlwidgets/lib/jquery"
     script: jquery.min.js
   - name: proj4js
@@ -8,8 +8,8 @@ dependencies:
     src: "htmlwidgets/lib/proj4js"
     script: proj4.js
   - name: highcharts
-    version: 7.0.1
-    src: "htmlwidgets/lib/highcharts-7.0.1"
+    version: 8.1.2
+    src: "htmlwidgets/lib/highcharts"
     script:
     - highcharts.js
     - highcharts-3d.js
@@ -17,9 +17,7 @@ dependencies:
     - modules/stock.js
     - modules/map.js
     - modules/annotations.js
-    - modules/boost.js
     - modules/data.js
-    - modules/drag-panes.js
     - modules/drilldown.js
     - modules/item-series.js
     - modules/offline-exporting.js
@@ -30,22 +28,34 @@ dependencies:
     - modules/heatmap.js
     - modules/treemap.js
     - modules/sankey.js
+    - modules/dependency-wheel.js
+    - modules/organization.js
     - modules/solid-gauge.js
     - modules/streamgraph.js
     - modules/sunburst.js
     - modules/vector.js
     - modules/wordcloud.js
-    - modules/xrange.js 
+    - modules/xrange.js
     - modules/tilemap.js
     - modules/venn.js
     - modules/gantt.js
     - modules/timeline.js
     - modules/parallel-coordinates.js
+    - modules/bullet.js
+    - modules/coloraxis.js
+    - modules/dumbbell.js
+    - modules/lollipop.js
+    - modules/series-label.js
+#    - modules/drag-panes.js
+#    - modules/marker-clusters.js
+#    - modules/datagrouping.js
+#    - modules/dotplot.js
+#    - modules/funnel3d.js
+#    - modules/pyramid3d.js    
 #    - modules/static-scale.js
 #    - modules/grid-axis.js
 #    - modules/broken-axis.js
-#    - modules/series-label.js
-#    - modules/pareto.js    
+#    - modules/pareto.js
 #    - modules/accessibility.js
 #    - modules/boost-canvas.js
 #    - modules/histogram-bellcurve.js
@@ -56,7 +66,6 @@ dependencies:
 #    - modules/windbarb.js
 #    - modules/annotations-advanced.js
 #    - modules/arrow-symbols.js
-#    - modules/bullet.js
 #    - modules/current-date-indicator.js
 #    - modules/cylinder.js
 #    - modules/debugger.js
@@ -70,17 +79,19 @@ dependencies:
 #    - modules/sonification.js
 #    - modules/stock-tools.js
 #    - modules/treegrid.js
-    - plugins/grouped-categories.js
+#    - plugins/grouped-categories.js
     - plugins/motion.js
-    - plugins/multicolor_series.js
-#    - plugins/highcharts-regression.js    
+#    - plugins/multicolor_series.js
+#    - plugins/highcharts-regression.js
 #    - plugins/pattern-fill-v2.js
 #    - plugins/tooltip-delay.js
 #    - plugins/annotations.js
 #    - plugins/draggable-legend.js
     - custom/reset.js
-    - custom/symbols-extra.js
-    - custom/text-symbols.js
+#    - custom/appear.js    
+#    - custom/symbols-extra.js
+#    - custom/text-symbols.js
+    - modules/boost.js
     stylesheet:
     - css/motion.css
-    - css/htmlwdgtgrid.css
+ #   - css/htmlwdgtgrid.css

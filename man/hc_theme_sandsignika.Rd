@@ -7,14 +7,13 @@
 hc_theme_sandsignika(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
 Sand Signika theme for highcharts
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_sandsignika())
-
 }

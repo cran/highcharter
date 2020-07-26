@@ -4,17 +4,14 @@
 \name{unemployment}
 \alias{unemployment}
 \title{US Counties unemployment rate}
-\format{A \code{data.frame} with 3 variables and 3.216 observations.}
-\source{
-\url{https://www.highcharts.com/samples/data/jsonp.php?filename=us-counties-unemployment.json}
+\format{
+A \code{data.frame} with 3 variables and 3.216 observations.
 }
 \usage{
 unemployment
 }
 \description{
-This data comes from the
-\url{https://www.highcharts.com/samples/data/jsonp.php?filename=us-counties-unemployment.json}
-and is used in highmaps examples.
+This data comes from the highcharts and is used in highmaps examples.
 }
 \section{Variables}{
 

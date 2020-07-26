@@ -7,14 +7,13 @@
 hc_theme_darkunica(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
 Dark Unica theme for highcharts
 }
 \examples{
 
-highcharts_demo() \%>\% 
- hc_add_theme(hc_theme_darkunica())
-
+highcharts_demo() \%>\%
+  hc_add_theme(hc_theme_darkunica())
 }

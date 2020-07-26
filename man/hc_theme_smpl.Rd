@@ -7,15 +7,15 @@
 hc_theme_smpl(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-Design inspired by \url{https://github.com/hrbrmstr/hrbrmisc/blob/master/R/themes.r}
-and color by \url{https://www.materialui.co/flatuicolors}
+Theme smpl design is inspired by \url{https://github.com/hrbrmstr/hrbrmisc/blob/master/R/themes.r}
+and color by \url{https://www.materialui.co/flatuicolors}.
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_smpl())
-
+  
 }

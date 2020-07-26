@@ -1,4 +1,4 @@
-#' City temperatures from a year
+#' City temperatures from a year in wide format
 #'
 #' This data comes from the \url{http://www.highcharts.com/} examples.
 #'
@@ -19,6 +19,26 @@
 #' @usage citytemp
 #' @format A \code{data frame} with 12 observations and 5 variables.
 "citytemp"
+
+#' City temperatures from a year in long format
+#'
+#' This data comes from the \url{http://www.highcharts.com/} examples.
+#'
+#' @section Variables:
+#'
+#' \itemize{
+#'
+#'  \item \code{month}: The months.
+#'  \item \code{citiy}: City.
+#'  \item \code{temp}: Temperatures.
+#' }
+#'
+#' @docType data
+#' @name citytemp_long
+#' @usage citytemp_long
+#' @format A \code{data frame} with 36 observations and 3 variables.
+"citytemp_long"
+
 
 #' Marshall's Favorite Bars
 #'
@@ -107,11 +127,10 @@
 #'  \item \code{egg_group_2}:
 #'  \item \code{url_image}:
 #' }
-#' 
+#'
 #' @docType data
 #' @name pokemon
 #' @usage pokemon
-#' @source \url{jkunst.com/r/pokemon-visualize-em-all/}
 #' @format A \code{data frame} with 718 observations and 20 variables.
 "pokemon"
 
@@ -138,10 +157,8 @@
 "stars"
 
 #' US Counties unemployment rate
-#' 
-#' This data comes from the 
-#' \url{https://www.highcharts.com/samples/data/jsonp.php?filename=us-counties-unemployment.json}
-#' and is used in highmaps examples.
+#'
+#' This data comes from the highcharts and is used in highmaps examples.
 #'
 #' @section Variables:
 #'
@@ -157,11 +174,10 @@
 #' @name unemployment
 #' @usage unemployment
 #' @format A `data.frame` with 3 variables and 3.216 observations.
-#' @source \url{https://www.highcharts.com/samples/data/jsonp.php?filename=us-counties-unemployment.json}
 "unemployment"
 
 #' US Counties map in Geojson format (list)
-#' 
+#'
 #' This data comes from the \url{https://code.highcharts.com/mapdata/countries/us/us-all-all.js}
 #' and is used in highmaps examples.
 #'
@@ -172,7 +188,7 @@
 "uscountygeojson"
 
 #' US States map in Geojson format (list)
-#' 
+#'
 #' This data comes from the \url{https://code.highcharts.com/mapdata/countries/us/us-all.js}
 #' and is used in highmaps examples.
 #'
@@ -184,7 +200,7 @@
 
 #' Vaccines
 #'
-#' The number of infected people by Measles, measured over 70-some years and across 
+#' The number of infected people by Measles, measured over 70-some years and across
 #' all 50 states. From the WSJ analysis: \url{http://graphics.wsj.com/infectious-diseases-and-vaccines/}
 #'
 #' @section Variables:
@@ -224,7 +240,7 @@
 "weather"
 
 #' World map in Geojson format (list)
-#' 
+#'
 #' This data comes from the \url{https://code.highcharts.com/mapdata/custom/world.js}
 #' and is used in highmaps examples.#'
 #'
@@ -233,4 +249,3 @@
 #' @usage worldgeojson
 #' @format A `list` in geojson format.
 "worldgeojson"
-

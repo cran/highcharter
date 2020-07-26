@@ -7,14 +7,13 @@
 hc_theme_elementary(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-Elementary (OS) theme for highcharts based on \url{https://elementary.io}
+Elementary (OS) theme for highcharts was based on \url{https://elementary.io}
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_elementary())
-
 }

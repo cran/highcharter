@@ -7,7 +7,7 @@
 hc_theme_handdrawn(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
 Hand Drawn theme for highcharts. Inspired by
@@ -15,7 +15,6 @@ Hand Drawn theme for highcharts. Inspired by
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_handdrawn())
-
 }

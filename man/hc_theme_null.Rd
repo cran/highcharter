@@ -7,14 +7,13 @@
 hc_theme_null(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-Null theme for highcharts. Axis are removed (\code{visible = FALSE}).
+For Null theme the axis are removed (\code{visible = FALSE}).
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_null())
-  
 }

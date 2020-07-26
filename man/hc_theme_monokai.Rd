@@ -7,14 +7,14 @@
 hc_theme_monokai(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-A well know text editor theme
+Monokai is a well know text editor theme.
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_monokai())
-
+  
 }

@@ -7,15 +7,16 @@
 hc_theme_chalk(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.
+
+Chalk theme for highcharts was inspired by
+\url{https://www.amcharts.com/inspiration/hand-drawn/}.}
 }
 \description{
-Chalk theme for highcharts. Inspired by
-\url{https://www.amcharts.com/inspiration/hand-drawn/}.
+Chalk theme for highcharts
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_chalk())
-
 }

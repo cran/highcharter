@@ -14,12 +14,11 @@ list_parse2(df)
 }
 \description{
 This functions are similar to \code{rlist::list.parse} but this removes
-names.
+names. \code{NA}s are removed for compatibility with rjson::toJSON.
 }
 \examples{
 
-x <- data.frame(a=1:3, type=c('A','C','B'), stringsAsFactors = FALSE)
+x <- data.frame(a = 1:3, type = c("A", "C", "B"), stringsAsFactors = FALSE)
 list_parse(x)
 list_parse2(x)
-
 }

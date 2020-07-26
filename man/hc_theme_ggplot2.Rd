@@ -7,14 +7,13 @@
 hc_theme_ggplot2(...)
 }
 \arguments{
-\item{...}{Named argument to modify the theme}
+\item{...}{A named parameters to modify the theme.}
 }
 \description{
-Based on \url{https://ggplot2.tidyverse.org/}.
+ggplot2 theme is based on \url{https://ggplot2.tidyverse.org/}.
 }
 \examples{
 
-highcharts_demo() \%>\% 
+highcharts_demo() \%>\%
   hc_add_theme(hc_theme_ggplot2())
-  
 }
