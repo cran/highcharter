@@ -2,7 +2,7 @@
 #'
 #' This functions are similar to \code{rlist::list.parse} but this removes
 #' names. \code{NA}s are removed for compatibility with rjson::toJSON.
-#' 
+#'
 #' @param df A data frame to parse to list
 #' @examples
 #'
@@ -12,7 +12,6 @@
 #' @importFrom purrr transpose
 #' @export
 list_parse <- function(df) {
-  
   assertthat::assert_that(is.data.frame(df))
 
   if (getOption("highcharter.rjson")) {
@@ -22,19 +21,17 @@ list_parse <- function(df) {
       warning("Removed ", (rows - nrow(df)), " rows with NA's.")
     }
   }
-  
+
   purrr::map_if(df, is.factor, as.character) %>%
     as_tibble() %>%
     list.parse() %>%
     setNames(NULL)
-  
 }
 
 #' @importFrom rlist list.parse
 #' @rdname list_parse
 #' @export
 list_parse2 <- function(df) {
-  
   assertthat::assert_that(is.data.frame(df))
 
   list_parse(df) %>%
@@ -52,7 +49,6 @@ list_parse2 <- function(df) {
 #' str_to_id(" A string _ with sd / sdg    Underscores \   ")
 #' @export
 str_to_id <- function(x) {
-  
   assertthat::assert_that(is.character(x) | is.factor(x))
 
   x %>%
@@ -64,14 +60,13 @@ str_to_id <- function(x) {
     stringr::str_replace_all("\\[|\\]", "_") %>%
     stringr::str_replace_all("_+", "_") %>%
     stringr::str_replace_all("_$|^_", "")
-  
 }
 
 #' @rdname str_to_id
-str_to_id_vec <- function(x){
-  
+str_to_id_vec <- function(x) {
+
   # x <- c("A_ aa", "A_  Aa", "a_   aa"
-  
+
   tibble(
     var = x,
     id = str_to_id(x),
@@ -80,9 +75,8 @@ str_to_id_vec <- function(x){
     mutate(
       un = ifelse(un == 0, "", str_c("_", un)),
       id2 = str_c(id, un)
-    ) %>% 
+    ) %>%
     pull("id2")
-  
 }
 
 
@@ -128,7 +122,6 @@ dt_tstp <- datetime_to_timestamp
 #' @importFrom tidyr unite_
 #' @export
 hex_to_rgba <- function(x, alpha = 1) {
-  
   x %>%
     col2rgb() %>%
     t() %>%
@@ -136,7 +129,6 @@ hex_to_rgba <- function(x, alpha = 1) {
     unite_(col = "rgba", from = c("red", "green", "blue"), sep = ",") %>%
     .[[1]] %>%
     sprintf("rgba(%s,%s)", ., alpha)
-  
 }
 
 #' Chart a demo for testing themes
@@ -146,10 +138,8 @@ hex_to_rgba <- function(x, alpha = 1) {
 #' @examples
 #'
 #' highcharts_demo()
-#' 
 #' @export
 highcharts_demo <- function() {
-  
   dtemp <- structure(
     list(
       month = c(
@@ -180,15 +170,14 @@ highcharts_demo <- function() {
   highchart() %>%
     hc_title(text = "Monthly Average Temperature") %>%
     hc_subtitle(text = "Source: WorldClimate.com") %>%
-    hc_caption(text = "This is a caption text to show the style of this type of text") %>% 
-    hc_credits(text = "Made with highcharter", href = "http://jkunst.com/highcharter/", enabled = TRUE) %>% 
+    hc_caption(text = "This is a caption text to show the style of this type of text") %>%
+    hc_credits(text = "Made with highcharter", href = "http://jkunst.com/highcharter/", enabled = TRUE) %>%
     hc_yAxis(title = list(text = "Temperature")) %>%
     hc_xAxis(title = list(text = "Months")) %>%
     hc_xAxis(categories = dtemp$month) %>%
     hc_add_series(name = "Tokyo", data = dtemp$tokyo) %>%
     hc_add_series(name = "London", data = dtemp$london) %>%
     hc_add_series(name = "Berlin", data = dtemp$berlin)
-  
 }
 
 #' Create vector of color from vector
@@ -204,9 +193,8 @@ highcharts_demo <- function() {
 #' @importFrom stats ecdf
 #' @export
 colorize <- function(x, colors = c("#440154", "#21908C", "#FDE725")) {
- 
   nuniques <- length(unique(x))
-  
+
   palcols <- grDevices::colorRampPalette(colors)(nuniques)
 
   if (!is.numeric(x) | nuniques < 10) {
@@ -218,7 +206,6 @@ colorize <- function(x, colors = c("#440154", "#21908C", "#FDE725")) {
   }
 
   xcols
-  
 }
 
 #' Function to create \code{stops} argument in \code{hc_colorAxis}
@@ -266,7 +253,7 @@ color_classes <- function(breaks = NULL,
 
 #' Auxiliar function to get series and options from tidy frame for hchart.data.frame
 #'
-#' This function is used in hchart.data.frame and hc_add_series_df
+#' This function is used in \code{hchart.data.frame}.
 #'
 #' @param data A `data.frame` object.
 #' @param type The type of chart. Possible values are line, scatter, point, column.
@@ -275,6 +262,7 @@ color_classes <- function(breaks = NULL,
 #' @examples
 #'
 #' highcharter:::get_hc_series_from_df(iris, type = "point", x = Sepal.Width)
+#' 
 #' @importFrom tibble has_name
 #' @importFrom rlang .data
 get_hc_series_from_df <- function(data, type = NULL, ...) {
@@ -319,8 +307,9 @@ get_hc_series_from_df <- function(data, type = NULL, ...) {
       data <- rename(data, colorValue = .data$color)
     } else {
       data <- mutate(data,
-                     colorv = .data$color,
-                     color = highcharter::colorize(.data$color))
+        colorv = .data$color,
+        color = highcharter::colorize(.data$color)
+      )
     }
   }
 
@@ -384,8 +373,7 @@ random_id <- function(n = 1, length = 10) {
 #'
 #' highchart() %>%
 #'   hc_add_series(data = 1)
-#'   
-#' @noRd   
+#' @noRd
 fix_1_length_data <- function(x) {
   if (getOption("highcharter.verbose")) {
     message("fix_1_length")
@@ -395,4 +383,28 @@ fix_1_length_data <- function(x) {
     x <- list(x)
   }
   x
+}
+
+#' Function to create annotations arguments from a data frame
+#' @param df A data frame with `x`, `y` and `text` columns names.
+#' @param xAxis Index (js 0-based) of the x axis to put the annotations.
+#' @param yAxis Index (js 0-based) of the y axis to put the annotations.
+#' @examples
+#'
+#' df <- data.frame(text = c("hi", "bye"), x = c(0, 1), y = c(1, 0))
+#'
+#' df_to_annotations_labels(df)
+#' @importFrom utils hasName
+#' @importFrom dplyr rowwise
+#' @export
+df_to_annotations_labels <- function(df, xAxis = 0, yAxis = 0) {
+  stopifnot(hasName(df, "x"))
+  stopifnot(hasName(df, "y"))
+  stopifnot(hasName(df, "text"))
+
+  df %>%
+    rowwise() %>%
+    mutate(point = list(list(x = x, y = y, xAxis = 0, yAxis = 0))) %>%
+    select(-x, -y) %>%
+    list_parse()
 }

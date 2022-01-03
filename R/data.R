@@ -1,6 +1,27 @@
+#' Visual comparison of Mountains Panorama
+#'
+#' This data comes from the \url{https://www.highcharts.com/} examples:  
+#' https://www.highcharts.com/demo/3d-area-multiple
+#'
+#' @section Variables:
+#'
+#' \itemize{
+#'
+#'  \item \code{place}: The place.
+#'  \item \code{name}: Name.
+#'  \item \code{heigth}: Heigth.
+#'
+#' }
+#'
+#' @docType data
+#' @name mountains_panorama
+#' @usage mountains_panorama
+#' @format A \code{data frame} with 91 observations and 3 variables.
+"mountains_panorama"
+
 #' City temperatures from a year in wide format
 #'
-#' This data comes from the \url{http://www.highcharts.com/} examples.
+#' This data comes from the \url{https://www.highcharts.com/} examples.
 #'
 #' @section Variables:
 #'
@@ -22,7 +43,7 @@
 
 #' City temperatures from a year in long format
 #'
-#' This data comes from the \url{http://www.highcharts.com/} examples.
+#' This data comes from the \url{https://www.highcharts.com/} examples.
 #'
 #' @section Variables:
 #'
@@ -101,37 +122,12 @@
 
 #' pokemon
 #'
-#' Information about 718 pokemon.
-#'
-#' @section Variables:
-#'
-#' \itemize{
-#'  \item \code{id}:
-#'  \item \code{pokemon}:
-#'  \item \code{species_id}:
-#'  \item \code{height}:
-#'  \item \code{weight}:
-#'  \item \code{base_experience}:
-#'  \item \code{type_1}:
-#'  \item \code{type_2}:
-#'  \item \code{attack}:
-#'  \item \code{defense}:
-#'  \item \code{hp}:
-#'  \item \code{special_attack}:
-#'  \item \code{special_defense}:
-#'  \item \code{speed}:
-#'  \item \code{color_1}:
-#'  \item \code{color_2}:
-#'  \item \code{color_f}:
-#'  \item \code{egg_group_1}:
-#'  \item \code{egg_group_2}:
-#'  \item \code{url_image}:
-#' }
+#' Information about 898 pokemon.
 #'
 #' @docType data
 #' @name pokemon
 #' @usage pokemon
-#' @format A \code{data frame} with 718 observations and 20 variables.
+#' @format A \code{data frame} with 898 observations and 24 variables.
 "pokemon"
 
 #' stars

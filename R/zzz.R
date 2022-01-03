@@ -9,13 +9,11 @@
 
 .onAttach <- function(libname = find.package("highcharter"),
                       pkgname = "highcharter") {
-  
-  if(stats::runif(1) <= 1/3) {
+  if (stats::runif(1) <= 1 / 3) {
     packageStartupMessage("Highcharts (www.highcharts.com) is a Highsoft software product which is")
-    
-    packageStartupMessage("not free for commercial and Governmental use")  
+
+    packageStartupMessage("not free for commercial and Governmental use")
   }
-  
 }
 
 .onLoad <- function(libname = find.package("highcharter"),
@@ -37,11 +35,20 @@
     highcharter.lang = list(
       contextButtonTitle = "Chart context menu",
       decimalPoint = ".",
+      downloadCSV = "Download CSV",
       downloadJPEG = "Download JPEG image",
       downloadPDF = "Download PDF document",
       downloadPNG = "Download PNG image",
       downloadSVG = "Download SVG vector image",
-      drillUpText = "Back to {series.name}",
+      downloadXLS = "Download XLS",
+      drillUpText = "\u25C1 Back to {series.name}",
+      exitFullscreen = "Exit from full screen",
+      exportData = list(
+        annotationHeader = "Annotations",
+        categoryDatetimeHeader = "DateTime",
+        categoryHeader = "Category"
+      ),
+      hideData = "Hide data table",
       invalidDate = NULL,
       loading = "Loading...",
       months = c(
@@ -49,7 +56,9 @@
         "May", "June", "July", "August",
         "September", "October", "November", "December"
       ),
+      # navigation
       noData = "No data to display",
+      numericSymbolMagnitude = 1000,
       numericSymbols = c("k", "M", "G", "T", "P", "E"),
       printChart = "Print chart",
       resetZoom = "Reset zoom",
@@ -58,7 +67,10 @@
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ),
+      shortWeekdays = c("Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"),
       thousandsSep = " ",
+      viewData = "View data table",
+      viewFullscreen = "View in full screen",
       weekdays = c(
         "Sunday", "Monday", "Tuesday", "Wednesday",
         "Thursday", "Friday", "Saturday"
@@ -104,9 +116,11 @@
   options(
     highcharter.theme = hc_theme(
       chart = list(backgroundColor = "transparent"),
-      colors = c("#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
-                 "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1")
-      ),
+      colors = c(
+        "#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
+        "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"
+      )
+    ),
     highcharter.verbose = FALSE,
     highcharter.google_fonts = TRUE,
     highcharter.debug = FALSE,
@@ -115,6 +129,6 @@
     highcharter.color_palette = c(
       "#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
       "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"
-      )
+    )
   )
 }

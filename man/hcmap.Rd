@@ -30,7 +30,7 @@ the joinBy and value are needed.}
 \item{joinBy}{What property to join the \code{map} and \code{df}.}
 
 \item{...}{Additional shared arguments for the data series
-(\url{http://api.highcharts.com/highcharts#series}).}
+(\url{https://api.highcharts.com/highcharts/series}).}
 }
 \description{
 Shortcut for create map from \url{https://code.highcharts.com/mapdata/}
@@ -38,23 +38,24 @@ collection.
 }
 \examples{
 
-hcmap(nullColor = "#DADADA")
-hcmap(nullColor = "#DADADA", download_map_data = FALSE)
+options(highcharter.download_map_data = TRUE)
+
+# hcmap(nullColor = "#DADADA")
+# hcmap(nullColor = "#DADADA", download_map_data = FALSE)
 
 require(dplyr)
 data("USArrests", package = "datasets")
 USArrests <- mutate(USArrests, "woe-name" = rownames(USArrests))
 
-hcmap(
-  map = "countries/us/us-all", data = USArrests,
-  joinBy = "woe-name", value = "UrbanPop", name = "Urban Population"
-)
+# hcmap(
+#   map = "countries/us/us-all", data = USArrests,
+#   joinBy = "woe-name", value = "UrbanPop", name = "Urban Population"
+# )
 
 # download_map_data = FALSE
-hcmap(
-  map = "countries/us/us-all", data = USArrests,
-  joinBy = "woe-name", value = "UrbanPop", name = "Urban Population",
-  download_map_data = FALSE
-)
-
+# hcmap(
+#    map = "countries/us/us-all", data = USArrests,
+#   joinBy = "woe-name", value = "UrbanPop", name = "Urban Population",
+#   download_map_data = FALSE
+# )
 }

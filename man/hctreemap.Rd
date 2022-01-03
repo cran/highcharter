@@ -10,14 +10,13 @@ hctreemap(tm, ...)
 \item{tm}{A \code{treemap} object from the treemap package.}
 
 \item{...}{Additional shared arguments for the data series
-(\url{http://api.highcharts.com/highcharts#series}).}
+(\url{https://api.highcharts.com/highcharts/series}).}
 }
 \description{
 This function helps to create highcharts treemaps from \code{treemap} objects
 from the package \code{treemap}. NOTE: This function is deprecated. Please use \code{hctreemap2} instead.
 }
 \examples{
-
 \dontrun{
 
 library("treemap")

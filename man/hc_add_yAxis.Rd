@@ -2,13 +2,20 @@
 % Please edit documentation in R/highcharts-api-helpers.R
 \name{hc_yAxis_multiples}
 \alias{hc_yAxis_multiples}
+\alias{hc_xAxis_multiples}
+\alias{hc_zAxis_multiples}
+\alias{create_axis}
 \alias{create_yaxis}
 \alias{hc_add_yAxis}
 \title{Creating multiples yAxis t use with highcharts}
 \usage{
 hc_yAxis_multiples(hc, ...)
 
-create_yaxis(
+hc_xAxis_multiples(hc, ...)
+
+hc_zAxis_multiples(hc, ...)
+
+create_axis(
   naxis = 2,
   heights = 1,
   sep = 0.01,
@@ -16,6 +23,8 @@ create_yaxis(
   turnopposite = TRUE,
   ...
 )
+
+create_yaxis(...)
 
 hc_add_yAxis(hc, ...)
 }
@@ -44,20 +53,20 @@ Otherwise the parameters are as supported by Y axis.
 \examples{
 
 highchart() \%>\%
-  hc_yAxis_multiples(create_yaxis(naxis = 2, heights = c(2, 1))) \%>\%
+  hc_yAxis_multiples(create_axis(naxis = 2, heights = c(2, 1))) \%>\%
   hc_add_series(data = c(1, 3, 2), yAxis = 0) \%>\%
   hc_add_series(data = c(20, 40, 10), yAxis = 1)
-
+ 
 highchart() \%>\%
-  hc_yAxis_multiples(create_yaxis(naxis = 3, lineWidth = 2, title = list(text = NULL))) \%>\%
+  hc_yAxis_multiples(create_axis(naxis = 3, lineWidth = 2, title = list(text = NULL))) \%>\%
   hc_add_series(data = c(1, 3, 2)) \%>\%
-  hc_add_series(data = c(20, 40, 10), yAxis = 1) \%>\%
-  hc_add_series(data = c(200, 400, 500), type = "columnn", yAxis = 2) \%>\%
-  hc_add_series(data = c(500, 300, 400), type = "columnn", yAxis = 2)
-  
+  hc_add_series(data = c(20, 40, 10), type = "area", yAxis = 1) \%>\%
+  hc_add_series(data = c(200, 400, 500), yAxis = 2) \%>\%
+  hc_add_series(data = c(500, 300, 400), type = "areaspline", yAxis = 2)
+   
 
 # Retrieve stock data to plot.
-aapl <- quantmod::getSymbols("AAPL", 
+aapl <- quantmod::getSymbols("AAPL",
   src = "yahoo",
   from = "2020-01-01",
   auto.assign = FALSE
@@ -70,5 +79,4 @@ highchart(type = "stock") \%>\%
   hc_add_yAxis(nid = 1L, title = list(text = "Prices"), relative = 2) \%>\%
   hc_add_series(aapl[, "AAPL.Volume"], yAxis = 1, type = "column", showInLegend = FALSE) \%>\%
   hc_add_yAxis(nid = 2L, title = list(text = "Volume"), relative = 1)
-  
 }

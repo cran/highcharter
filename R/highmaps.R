@@ -7,7 +7,7 @@
 #' @param value A string value with the name of the variable to chart.
 #' @param joinBy What property to join the  \code{map} and \code{df}
 #' @param ... Additional shared arguments for the data series
-#'   (\url{http://api.highcharts.com/highcharts#series}).
+#'   (\url{https://api.highcharts.com/highcharts/series}).
 #'
 #' @examples
 #'
@@ -32,7 +32,6 @@
 #'   hc_colorAxis(stops = color_stops()) %>%
 #'   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
 #'   hc_mapNavigation(enabled = TRUE)
-#'   
 #' \dontrun{
 #'
 #' data(worldgeojson, package = "highcharter")
@@ -51,7 +50,6 @@
 #' @importFrom utils tail
 #' @export
 hc_add_series_map <- function(hc, map, df, value, joinBy, ...) {
-  
   assertthat::assert_that(
     is.highchart(hc),
     is.list(map),
@@ -88,29 +86,30 @@ hc_add_series_map <- function(hc, map, df, value, joinBy, ...) {
 #' @param value A string value with the name of the variable to chart.
 #' @param joinBy What property to join the \code{map} and \code{df}.
 #' @param ... Additional shared arguments for the data series
-#'   (\url{http://api.highcharts.com/highcharts#series}).
+#'   (\url{https://api.highcharts.com/highcharts/series}).
 #'
 #' @examples
 #'
-#' hcmap(nullColor = "#DADADA")
-#' hcmap(nullColor = "#DADADA", download_map_data = FALSE)
+#' options(highcharter.download_map_data = TRUE)
+#'
+#' # hcmap(nullColor = "#DADADA")
+#' # hcmap(nullColor = "#DADADA", download_map_data = FALSE)
 #'
 #' require(dplyr)
 #' data("USArrests", package = "datasets")
 #' USArrests <- mutate(USArrests, "woe-name" = rownames(USArrests))
 #'
-#' hcmap(
-#'   map = "countries/us/us-all", data = USArrests,
-#'   joinBy = "woe-name", value = "UrbanPop", name = "Urban Population"
-#' )
+#' # hcmap(
+#' #   map = "countries/us/us-all", data = USArrests,
+#' #   joinBy = "woe-name", value = "UrbanPop", name = "Urban Population"
+#' # )
 #'
 #' # download_map_data = FALSE
-#' hcmap(
-#'   map = "countries/us/us-all", data = USArrests,
-#'   joinBy = "woe-name", value = "UrbanPop", name = "Urban Population",
-#'   download_map_data = FALSE
-#' )
-#' 
+#' # hcmap(
+#' #    map = "countries/us/us-all", data = USArrests,
+#' #   joinBy = "woe-name", value = "UrbanPop", name = "Urban Population",
+#' #   download_map_data = FALSE
+#' # )
 #' @importFrom htmltools htmlDependency
 #' @importFrom rlang .data
 #' @export
@@ -174,6 +173,7 @@ hcmap <- function(map = "custom/world",
 #' @seealso \code{\link{hcmap}}
 #' @importFrom dplyr glimpse
 #' @importFrom utils download.file
+#' @importFrom stringr str_remove
 #' @export
 download_map_data <- function(url = "custom/world.js", showinfo = FALSE,
                               quiet = FALSE) {
@@ -187,6 +187,7 @@ download_map_data <- function(url = "custom/world.js", showinfo = FALSE,
   mapdata <- readLines(tmpfile, warn = FALSE, encoding = "UTF-8")
   mapdata[1] <- gsub(".* = ", "", mapdata[1])
   mapdata <- paste(mapdata, collapse = "\n")
+  mapdata <- stringr::str_remove(mapdata, ";$")
   mapdata <- jsonlite::fromJSON(mapdata, simplifyVector = FALSE)
 
   if (showinfo) {

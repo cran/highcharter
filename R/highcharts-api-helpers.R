@@ -20,8 +20,10 @@ validate_args <- function(name, lstargs) {
 #' @importFrom rlist list.merge
 .hc_opt <- function(hc, name, ...) {
   assertthat::assert_that(is.highchart(hc))
-
-  validate_args(name, eval(substitute(alist(...))))
+  
+  if(!name %in% c("yAxis")) {
+    validate_args(name, eval(substitute(alist(...))))  
+  }
 
   if (is.null(hc$x$hc_opts[[name]])) {
     hc$x$hc_opts[[name]] <- list(...)
@@ -36,7 +38,7 @@ validate_args <- function(name, lstargs) {
 }
 
 .hc_tooltip_table <- function(hc, ...) {
-  # http://stackoverflow.com/a/22327749/829971
+  # https://stackoverflow.com/a/22327749/829971
   hc %>%
     highcharter::hc_tooltip(
       shared = TRUE,
@@ -48,7 +50,7 @@ validate_args <- function(name, lstargs) {
 }
 
 .hc_tooltip_sort <- function(hc, ...) {
-  # http://stackoverflow.com/a/16954666/829971
+  # https://stackoverflow.com/a/16954666/829971
   hc %>%
     highcharter::hc_tooltip(
       shared = TRUE,
@@ -82,7 +84,7 @@ validate_args <- function(name, lstargs) {
 #' inside of `hc_tooltip` function an `useHTML = TRUE` option.
 #'
 #' @param accesor A string indicating the name of the column where the data is.
-#' @param hc_opts A list of options using the  \url{http://api.highcharts.com/highcharts}
+#' @param hc_opts A list of options using the  \url{https://api.highcharts.com/highcharts/}
 #'   syntax.
 #' @param width	A numeric input in pixels indicating the with of the tooltip.
 #' @param height	A numeric input in pixels indicating the height of the tooltip.
@@ -90,8 +92,7 @@ validate_args <- function(name, lstargs) {
 #' @importFrom stringr str_glue
 #' @importFrom htmlwidgets JS
 #' @examples
-#'
-#' \dontrun{
+#' 
 #' require(dplyr)
 #' require(purrr)
 #' require(tidyr)
@@ -159,11 +160,10 @@ validate_args <- function(name, lstargs) {
 #'       )
 #'     )
 #'   )
-#' }
+#' 
 #'
 #' @export
-tooltip_chart <- function(
-                          accesor = NULL,
+tooltip_chart <- function(accesor = NULL,
                           hc_opts = NULL,
                           width = 250,
                           height = 150) {
@@ -337,11 +337,10 @@ hc_size <- function(hc, width = NULL, height = NULL) {
 #' @param hc A \code{highchart} \code{htmlwidget} object.
 #' @param enabled Enable the motion plugin.
 #' @param startIndex start index, default to 0.
-#' @param ... Arguments defined in \url{https://github.com/larsac07/Motion-Highcharts-Plugin/wiki}.
+#' @param ... Arguments defined in \url{https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki}.
 #'
 #' @export
 hc_motion <- function(hc, enabled = TRUE, startIndex = 0, ...) {
-  
   hc <- .hc_opt(hc, "motion", enabled = enabled, startIndex = startIndex, ...)
 
   hc
@@ -350,42 +349,65 @@ hc_motion <- function(hc, enabled = TRUE, startIndex = 0, ...) {
 #' @rdname hc_add_yAxis
 #' @export
 hc_yAxis_multiples <- function(hc, ...) {
-  if (length(list(...)) == 1 & class(list(...)[[1]]) == "hc_yaxis_list") {
+  if (length(list(...)) == 1 & class(list(...)[[1]]) == "hc_axis_list") {
     hc$x$hc_opts$yAxis <- list(...)[[1]]
   } else {
     hc$x$hc_opts$yAxis <- list(...)
   }
-
   hc
 }
 
+#' @rdname hc_add_yAxis
+#' @export
+hc_xAxis_multiples <- function(hc, ...) {
+  if (length(list(...)) == 1 & class(list(...)[[1]]) == "hc_axis_list") {
+    hc$x$hc_opts$xAxis <- list(...)[[1]]
+  } else {
+    hc$x$hc_opts$xAxis <- list(...)
+  }
+  hc
+}
+
+#' @rdname hc_add_yAxis
+#' @export
+hc_zAxis_multiples <- function(hc, ...) {
+  if (length(list(...)) == 1 & class(list(...)[[1]]) == "hc_axis_list") {
+    hc$x$hc_opts$zAxis <- list(...)[[1]]
+  } else {
+    hc$x$hc_opts$zAxis <- list(...)
+  }
+  hc
+}
+
+
+
 #' Creating multiples yAxis t use with highcharts
-#' 
+#'
 #' @param naxis Number of axis an integer.
 #' @param heights A numeric vector. This values will be normalized.
 #' @param sep A numeric value for the separation (in percentage) for the panes.
 #' @param offset A numeric value (in percentage).
 #' @param turnopposite A logical value to turn the side of each axis or not.
-#' @param ... Arguments defined in \url{http://api.highcharts.com/highcharts/yAxis}.
-#' 
+#' @param ... Arguments defined in \url{https://api.highcharts.com/highcharts/yAxis}.
+#'
 #' @examples
 #'
 #' highchart() %>%
-#'   hc_yAxis_multiples(create_yaxis(naxis = 2, heights = c(2, 1))) %>%
+#'   hc_yAxis_multiples(create_axis(naxis = 2, heights = c(2, 1))) %>%
 #'   hc_add_series(data = c(1, 3, 2), yAxis = 0) %>%
 #'   hc_add_series(data = c(20, 40, 10), yAxis = 1)
-#'
+#'  
 #' highchart() %>%
-#'   hc_yAxis_multiples(create_yaxis(naxis = 3, lineWidth = 2, title = list(text = NULL))) %>%
+#'   hc_yAxis_multiples(create_axis(naxis = 3, lineWidth = 2, title = list(text = NULL))) %>%
 #'   hc_add_series(data = c(1, 3, 2)) %>%
-#'   hc_add_series(data = c(20, 40, 10), yAxis = 1) %>%
-#'   hc_add_series(data = c(200, 400, 500), type = "columnn", yAxis = 2) %>%
-#'   hc_add_series(data = c(500, 300, 400), type = "columnn", yAxis = 2)
-#'   
+#'   hc_add_series(data = c(20, 40, 10), type = "area", yAxis = 1) %>%
+#'   hc_add_series(data = c(200, 400, 500), yAxis = 2) %>%
+#'   hc_add_series(data = c(500, 300, 400), type = "areaspline", yAxis = 2)
+#'    
 #' @importFrom dplyr bind_cols
 #' @rdname hc_add_yAxis
 #' @export
-create_yaxis <- function(naxis = 2, heights = 1, sep = 0.01,
+create_axis <- function(naxis = 2, heights = 1, sep = 0.01,
                          offset = 0, turnopposite = TRUE, ...) {
   pcnt <- function(x) paste0(x * 100, "%")
 
@@ -395,9 +417,7 @@ create_yaxis <- function(naxis = 2, heights = 1, sep = 0.01,
     map(function(x) c(x, sep)) %>%
     unlist() %>%
     head(-1) %>%
-    {
-      . / sum(.)
-    } %>%
+    {. / sum(.)} %>%
     round(5)
 
   tops <- cumsum(c(0, head(heights, -1)))
@@ -417,33 +437,41 @@ create_yaxis <- function(naxis = 2, heights = 1, sep = 0.01,
 
   dfaxis <- bind_cols(dfaxis, tibble(nid = seq(naxis), ...))
 
-  yaxis <- list_parse(dfaxis)
+  axles <- list_parse(dfaxis)
 
-  class(yaxis) <- "hc_yaxis_list"
+  class(axles) <- "hc_axis_list"
 
-  yaxis
+  axles
+}
+
+
+#' @rdname hc_add_yAxis
+#' @export
+create_yaxis <- function(...){
+  .Deprecated(msg = "Deprecated function. Use the `create_axis` function.")
+  create_axis(...)
 }
 
 #' yAxis add highcharter objects
-#' 
+#'
 #' The Y axis or value axis. Normally this is the vertical axis,
 #' though if the chart is inverted this is the horizontal axis.
 #' Add yAxis allows to add multiple axis with a relative height between Y axis.
 #' Based upon the `relative` parameter the height of each Y axis is recalculated.
 #' Otherwise the parameters are as supported by Y axis.
-#' 
-#' @param hc A `highchart` `htmlwidget` object. 
-#' @param ... Arguments defined in \url{https://api.highcharts.com/highcharts/yAxis}. 
+#'
+#' @param hc A `highchart` `htmlwidget` object.
+#' @param ... Arguments defined in \url{https://api.highcharts.com/highcharts/yAxis}.
 #'
 #' @examples
-#' 
+#'
 #' # Retrieve stock data to plot.
-#' aapl <- quantmod::getSymbols("AAPL", 
+#' aapl <- quantmod::getSymbols("AAPL",
 #'   src = "yahoo",
 #'   from = "2020-01-01",
 #'   auto.assign = FALSE
 #' )
-#' 
+#'
 #' # Plot prices and volume with relative height.
 #' highchart(type = "stock") %>%
 #'   hc_title(text = "AAPLE") %>%
@@ -451,40 +479,41 @@ create_yaxis <- function(naxis = 2, heights = 1, sep = 0.01,
 #'   hc_add_yAxis(nid = 1L, title = list(text = "Prices"), relative = 2) %>%
 #'   hc_add_series(aapl[, "AAPL.Volume"], yAxis = 1, type = "column", showInLegend = FALSE) %>%
 #'   hc_add_yAxis(nid = 2L, title = list(text = "Volume"), relative = 1)
-#'   
 #' @export
 hc_add_yAxis <- function(hc, ...) {
-  
+
   # author @nordicgit70
-  
+
   assertthat::assert_that(is.highchart(hc))
-  
+
   # Check for single yAxis, by title attribute.
   if (assertthat::has_name(hc$x$hc_opts$yAxis, "title")) {
     # When yAxis only has empty title we can overwrite,
     # otherwise we move yAxis to become first in the list.
     if ((length(hc$x$hc_opts$yAxis) == 1) &&
-        is.null(hc$x$hc_opts$yAxis$title$text)) {
+      is.null(hc$x$hc_opts$yAxis$title$text)) {
       hc <- .hc_opt(hc, "yAxis", ...)
       return(hc)
     } else { # move the existing yAxis
       hc$x$hc_opts$yAxis <- list(hc$x$hc_opts$yAxis)
     }
   }
-  
+
   # Add new yAxis to the list.
   validate_args("yAxis", eval(substitute(alist(...))))
   hc$x$hc_opts$yAxis <- append(hc$x$hc_opts$yAxis, list(list(...)))
-  
+
   # Optional layout with relative heights.
   relative <- list(...)["relative"]
   if (!is.null(relative)) {
     # Calculate the total relative(s) and initiate offset.
-    layout <- Reduce("+", lapply(hc$x$hc_opts$yAxis, function(y) { y$relative }))
+    layout <- Reduce("+", lapply(hc$x$hc_opts$yAxis, function(y) {
+      y$relative
+    }))
     tops <- 0
     for (i in 1:length(hc$x$hc_opts$yAxis)) {
-      part <- as.numeric(hc$x$hc_opts$yAxis[[i]]["relative"]) 
-      height <- round((part * 100)/layout, 3)
+      part <- as.numeric(hc$x$hc_opts$yAxis[[i]]["relative"])
+      height <- round((part * 100) / layout, 3)
       hc$x$hc_opts$yAxis[[i]]["top"] <- paste0(tops, "%")
       hc$x$hc_opts$yAxis[[i]]["height"] <- paste0(height, "%")
       hc$x$hc_opts$yAxis[[i]]["offset"] <- 0
@@ -493,4 +522,3 @@ hc_add_yAxis <- function(hc, ...) {
   }
   return(hc)
 }
-

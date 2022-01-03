@@ -7,11 +7,11 @@
 \usage{
 highchart2(
   hc_opts = list(),
-  theme = NULL,
+  theme = getOption("highcharter.theme"),
+  type = "chart",
   width = NULL,
   height = NULL,
   elementId = NULL,
-  debug = FALSE,
   google_fonts = getOption("highcharter.google_fonts")
 )
 
@@ -25,18 +25,18 @@ highchartzero(
 }
 \arguments{
 \item{hc_opts}{A \code{list} object containing options defined as
-\url{http://api.highcharts.com/highcharts}.}
+\url{https://api.highcharts.com/highcharts/}.}
 
-\item{theme}{A \code{hc_theme} class object}
+\item{theme}{A \code{hc_theme} class object.}
+
+\item{type}{A character value to set if use Highchart, Highstock or
+Highmap. Options are \code{"chart"}, \code{"stock"} and \code{"map"}.}
 
 \item{width}{A numeric input in pixels.}
 
 \item{height}{A numeric input in pixels.}
 
 \item{elementId}{Use an explicit element ID for the widget.}
-
-\item{debug}{A boolean value if you want to print in the browser console the
-parameters given to \code{highchart}.}
 
 \item{google_fonts}{A boolean value. If TRUE (default), adds a reference to the
 Google Fonts API to the HTML head, downloading CSS for the font families

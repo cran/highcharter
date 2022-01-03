@@ -1,3 +1,33 @@
+# highcharter 0.9.4
+
+## Changes
+
+* Highcharter now uses HighchartsJS 9.3.1.
+* Support highcharts gantt extension (#287). 
+* Adding missed language options in `getOption("highcharter.lang")`.
+* Adding `hcpxy_add_series`, `hcpxy_remove_series`, `hcpxy_update`, `hcpxy_update_series`,
+`hcpxy_add_point`, `hcpxy_remove_point` and `hcpxy_loading`.
+* Adding `hcpxy_set_date` and `hcpxy_redraw` thanks to @PaulC91.
+* Adding `hc_loading` for use with `hcpxy_loading`.
+* Adding `hcpxy_update_point` due @zevross (https://twitter.com/zevross/status/1403394816558383105).
+* Update jQuery from 3.5.0 to 3.5.1. This solve the problem in flexdashboard menu
+when the size of viewport is small (like tables o phones).
+* Adding new data `mountains_panorama`.
+* Update `pokemon` data.
+
+## Bugs
+
+* Fix url in documentations via `devtools::check_rhub()`.
+* Removing `knitr.figure = FALSE` option in `sizingPolicy = htmlwidgets::sizingPolicy`
+to fix #703 
+
+## Internal
+
+* Back to previous definition in inst/htmlwidegts/highchart.js. From 
+`factory: function(el, width, height) { ... ` to 
+`renderValue: function(el, x, instance) { ...` due this way the widget
+resize to use the space in flexdashboards (WIP).
+
 # highcharter 0.8.2
 
 ## Changes

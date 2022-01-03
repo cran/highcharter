@@ -1,7 +1,7 @@
 #' Sand Signika theme for highcharts
-#' 
+#'
 #' @param ... A named parameters to modify the theme.
-#' 
+#'
 #' @examples
 #'
 #' highcharts_demo() %>%
@@ -17,7 +17,7 @@ hc_theme_sandsignika <- function(...) {
       chart = list(
         backgroundColor = NULL,
         divBackgroundImage =
-          "http://www.highcharts.com/samples/graphics/sand.png",
+          "https://www.highcharts.com/samples/graphics/sand.png",
         style = list(
           fontFamily = "Signika, serif"
         )
@@ -68,7 +68,6 @@ hc_theme_sandsignika <- function(...) {
           shadow = FALSE
         )
       ),
-
       navigator = list(
         xAxis = list(
           gridLineColor = "#D0D0D8"
@@ -89,7 +88,6 @@ hc_theme_sandsignika <- function(...) {
       scrollbar = list(
         trackBorderColor = "#C0C0C8"
       ),
-
       background2 = "#E0E0E8"
     )
 
