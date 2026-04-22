@@ -150,7 +150,7 @@ hchart.mforecast <- function(object, separate = TRUE, fillOpacity = 0.3, ...) {
   tmf <- datetime_to_timestamp(zoo::as.Date(time(object$mean[[1]])))
   nms <- attr(object$x, "dimnames")[[2]]
 
-  hc <- hchart.mts2(object$x) %>%
+  hc <- hchart_mts2(object$x) %>%
     hc_plotOptions(
       series = list(
         marker = list(enabled = FALSE)
@@ -250,15 +250,15 @@ hchart.acf <- function(object, ...) {
 hchart.mts <- function(object, ..., separate = TRUE,
                        heights = rep(1, ncol(object))) {
   if (separate) {
-    hc <- hchart.mts2(object, heights = heights, ...)
+    hc <- hchart_mts2(object, heights = heights, ...)
   } else {
-    hc <- hchart.mts1(object, ...)
+    hc <- hchart_mts1(object, ...)
   }
 
   hc
 }
 
-hchart.mts1 <- function(object, ...) {
+hchart_mts1 <- function(object, ...) {
   hc <- highchart() %>%
     hc_xAxis(type = "datetime")
 
@@ -274,7 +274,7 @@ hchart.mts1 <- function(object, ...) {
   hc
 }
 
-hchart.mts2 <- function(object, ..., heights = rep(1, ncol(object)), sep = 0.01) {
+hchart_mts2 <- function(object, ..., heights = rep(1, ncol(object)), sep = 0.01) {
   ntss <- ncol(object)
 
   hc <- highchart() %>%
@@ -283,7 +283,7 @@ hchart.mts2 <- function(object, ..., heights = rep(1, ncol(object)), sep = 0.01)
 
   hc <- hc %>%
     hc_yAxis_multiples(
-      create_yaxis(ntss,
+      create_axis(ntss,
         heights = heights, turnopposite = TRUE,
         title = list(text = NULL), offset = 0, lineWidth = 2,
         showFirstLabel = FALSE, showLastLabel = FALSE, ...
@@ -297,8 +297,8 @@ hchart.mts2 <- function(object, ..., heights = rep(1, ncol(object)), sep = 0.01)
     hc <- hc %>% hc_add_series(object[, col], yAxis = col - 1, name = nm, id = nm, ...)
   }
 
-
   hc
+
 }
 
 #' @export
@@ -310,7 +310,7 @@ hchart.stl <- function(object, ..., heights = c(2, 1, 1, 1), sep = 0.01) {
 
   attr(tss, "dimnames")[[2]] <- gsub("tss\\.", "", attr(tss, "dimnames")[[2]])
 
-  hchart.mts2(tss)
+  hchart_mts2(tss)
 }
 
 #' @export
@@ -323,7 +323,7 @@ hchart.ets <- function(object, ...) {
 
   colnames(data) <- cn <- names[stats::na.exclude(match(cn, names(names)))]
 
-  hc <- hchart.mts2(data)
+  hc <- hchart_mts2(data)
 
   hc <- hc_title(hc, text = paste("Decomposition by", object$method, "method"))
 
@@ -355,8 +355,9 @@ hchart.matrix <- function(object, label = FALSE, showInLegend = FALSE, ...) {
   yid <- seq(length(ynm)) - pos
 
   ds <- as.data.frame(df) %>%
-    tibble::as_tibble() %>%
-    bind_cols(tibble(ynm), .) %>%
+    tibble::as_tibble()
+  ds <- bind_cols(tibble(ynm), ds)
+  ds <- ds %>%
     gather("key", "value", -ynm) %>%
     rename(xnm = .data$key) %>%
     mutate(
@@ -420,21 +421,48 @@ hchart.dist <- function(object, ...) {
   hchart.matrix(as.matrix(object))
 }
 
-#' @importFrom igraph vertex_attr edge_attr get.edgelist layout_nicely
+#' Plot igraph objects using Highcharts
+#' 
+#' @param object An igraph object.
+#' @param layout A layout from igraph package.
+#' @param ... Additional arguments for the data series
+#'    (\url{https://api.highcharts.com/highcharts/series}). 
 #' @importFrom stats setNames
 #' @importFrom rlang .data
+#' @examples
+#' 
+#' if(require("igraph")) {
+#' 
+#' N <- 40
+#' net <- sample_gnp(N, p = 2 / N)
+#' wc <- cluster_walktrap(net)
+#' V(net)$label <- seq(N)
+#' V(net)$name <- paste("I'm #", seq(N))
+#' V(net)$page_rank <- round(page_rank(net)$vector, 2)
+#' V(net)$betweenness <- round(betweenness(net), 2)
+#' V(net)$degree <- degree(net)
+#' V(net)$size <- V(net)$degree
+#' V(net)$comm <- as.vector(membership(wc))
+#' V(net)$color <- colorize(membership(wc))
+#' hchart(net, layout = layout_with_fr)
+#' 
+#' }
+#' 
+#' 
 #' @export
-hchart.igraph <- function(object, ..., layout = layout_nicely, digits = 2) {
-
+hchart.igraph <- function(object, ..., layout = NULL) {
+  # @importFrom igraph vertex_attr edge_attr get.edgelist layout_nicely
+  requireNamespace("igraph") 
   # data
+  if(missing(layout)) layout <- igraph::layout_nicely
   dfv <- layout(object) %>%
-    round(digits) %>%
+    round(5) %>%
     data.frame() %>%
     tibble::as_tibble() %>%
     setNames(c("x", "y"))
 
   dfvex <- object %>%
-    vertex_attr() %>%
+    igraph::vertex_attr() %>%
     data.frame(stringsAsFactors = FALSE) %>%
     tibble::as_tibble()
 
@@ -449,7 +477,7 @@ hchart.igraph <- function(object, ..., layout = layout_nicely, digits = 2) {
   names(dfv) <- str_replace_all(names(dfv), "\\.", "_")
 
   dfe <- object %>%
-    get.edgelist() %>%
+    igraph::get.edgelist() %>%
     data.frame(stringsAsFactors = FALSE) %>%
     tibble::as_tibble() %>%
     setNames(c("from", "to")) %>%
@@ -462,7 +490,7 @@ hchart.igraph <- function(object, ..., layout = layout_nicely, digits = 2) {
     mutate(linkedTo = "e")
 
   dfex <- object %>%
-    edge_attr() %>%
+    igraph::edge_attr() %>%
     data.frame(stringsAsFactors = FALSE) %>%
     tibble::as_tibble()
 
@@ -726,7 +754,7 @@ hchart.density <- function(object, type = "area", ...) {
 }
 
 #' @importFrom dplyr as_tibble
-hchart.pca <- function(sdev, n.obs, scores, loadings, ...,
+hchart_pca <- function(sdev, n.obs, scores, loadings, ...,
                        choices = 1L:2L, scale = 1) {
   stopifnot(length(choices) == 2L)
   stopifnot(0 <= scale | scale <= 1)
@@ -750,10 +778,9 @@ hchart.pca <- function(sdev, n.obs, scores, loadings, ...,
   mx <- max(abs(dfobs[, 2:3]))
   mc <- max(abs(dfcomp))
 
-  dfcomp <- dfcomp %>%
-    {
-      . / mc * mx
-    } %>%
+  dfcomp <- dfcomp
+  dfcomp <- dfcomp / mc * mx
+  dfcomp <- dfcomp %>% 
     as.data.frame() %>%
     setNames(c("x", "y")) %>%
     rownames_to_column("name") %>%
@@ -777,7 +804,7 @@ hchart.pca <- function(sdev, n.obs, scores, loadings, ...,
 
 #' @export
 hchart.princomp <- function(object, ..., choices = 1L:2L, scale = 1) {
-  hchart.pca(object$sdev, object$n.obs, object$scores, object$loadings,
+  hchart_pca(object$sdev, object$n.obs, object$scores, object$loadings,
     choices = choices, scale = scale, ...
   )
 }
@@ -785,7 +812,7 @@ hchart.princomp <- function(object, ..., choices = 1L:2L, scale = 1) {
 #' @importFrom dplyr as_tibble
 #' @export
 hchart.prcomp <- function(object, ..., choices = 1L:2L, scale = 1) {
-  hchart.pca(object$sdev, nrow(object$x), object$x, object$rotation,
+  hchart_pca(object$sdev, nrow(object$x), object$x, object$rotation,
     choices = choices, scale = scale, ...
   )
 }

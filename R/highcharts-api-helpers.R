@@ -349,7 +349,7 @@ hc_motion <- function(hc, enabled = TRUE, startIndex = 0, ...) {
 #' @rdname hc_add_yAxis
 #' @export
 hc_yAxis_multiples <- function(hc, ...) {
-  if (length(list(...)) == 1 & class(list(...)[[1]]) == "hc_axis_list") {
+  if (length(list(...)) == 1 & inherits(list(...)[[1]], "hc_axis_list")) {
     hc$x$hc_opts$yAxis <- list(...)[[1]]
   } else {
     hc$x$hc_opts$yAxis <- list(...)
@@ -360,7 +360,7 @@ hc_yAxis_multiples <- function(hc, ...) {
 #' @rdname hc_add_yAxis
 #' @export
 hc_xAxis_multiples <- function(hc, ...) {
-  if (length(list(...)) == 1 & class(list(...)[[1]]) == "hc_axis_list") {
+  if (length(list(...)) == 1 & inherits(list(...)[[1]], "hc_axis_list")) {
     hc$x$hc_opts$xAxis <- list(...)[[1]]
   } else {
     hc$x$hc_opts$xAxis <- list(...)
@@ -371,7 +371,7 @@ hc_xAxis_multiples <- function(hc, ...) {
 #' @rdname hc_add_yAxis
 #' @export
 hc_zAxis_multiples <- function(hc, ...) {
-  if (length(list(...)) == 1 & class(list(...)[[1]]) == "hc_axis_list") {
+  if (length(list(...)) == 1 & inherits(list(...)[[1]], "hc_axis_list")) {
     hc$x$hc_opts$zAxis <- list(...)[[1]]
   } else {
     hc$x$hc_opts$zAxis <- list(...)

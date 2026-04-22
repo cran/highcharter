@@ -520,7 +520,7 @@ hc_exporting <- function(hc, ...) {
 #' annotations that support labels.
 #'
 #' @param hc A `highchart` `htmlwidget` object.
-#' @param ... Arguments defined in \url{https://api.highcharts.com/highcharts/labels}.
+#' @param ... Arguments defined in the Highcharts labels API.
 #'
 #' @examples
 #'

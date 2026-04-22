@@ -9,7 +9,7 @@ hc_labels(hc, ...)
 \arguments{
 \item{hc}{A \code{highchart} \code{htmlwidget} object.}
 
-\item{...}{Arguments defined in \url{https://api.highcharts.com/highcharts/labels}.}
+\item{...}{Arguments defined in the Highcharts labels API.}
 }
 \description{
 HTML labels that can be positioned anywhere in the chart area.

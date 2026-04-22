@@ -1,3 +1,15 @@
+# highcharter 0.9.5
+
+## Bugs
+
+* Fixed `download_map_data` to prevent 403 Forbidden errors when fetching data (fixes CRAN Package Checks and resolves #842).
+* Renamed internal helper function `hchart.pca` to `hchart_pca` to resolve an unregistered S3 method mismatch NOTE.
+* Uses `page_rank` instead of deprecated `page.rank` function.
+* Converts igraph membership to vector to avoid data frame coercion errors.
+* Replace `class() ==` comparisons with `inherits()` in `hc_yAxis_multiples`, `hc_xAxis_multiples`, and `hc_zAxis_multiples` to fix CRAN NOTE.
+* Replace deprecated `@docType "package"` with `"_PACKAGE"` sentinel in `highcharter-package.R`.
+* Fixed missing or moved URLs.
+
 # highcharter 0.9.4
 
 ## Changes
